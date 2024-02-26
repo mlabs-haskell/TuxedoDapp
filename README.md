@@ -25,7 +25,7 @@ The web-based wallet will provide a secure method for private key storage on the
 **Functionality**: 
 1. Feature Parity Between Web-Based and CLI Wallets
 The web-based wallet will be designed to mirror the core functionality of the CLI wallet, offering seamless UTXO synchronization and token handling, ensuring that users have an equivalent experience across both interfaces
-Note: _Feature Parity_ means Means web-based and command-line interface (CLI) wallets, have the same set of features and functionalities, both versions provide an equivalent or identical user experience by offering the same core capabilities and options.
+Note: _Feature Parity_ means web-based and command-line interface (CLI) wallets, have the same set of features and functionalities, both versions provide an equivalent or identical user experience by offering the same core capabilities and options.
 
 2. Issues Fix in web-based wallet (https://github.com/Off-Narrative-Labs/Tuxedo/issues/62)
 The current implementation of a CLI-based wallet allows sending inputs from multiple owners in a single transaction, but it only supports a single recipient for all specified outputs.
