@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import {
   Button,
   Stack,
@@ -9,9 +9,25 @@ import {
   Heading,
   Divider, FormControl, FormLabel, Textarea, Switch,
   Text,
+  useDisclosure, useToast,
 } from '@chakra-ui/react';
+import { CartIcon } from "chakra-ui-ionicons";
+import { BuyModal } from "../components/BuyModal";
 
 export const Details = () => {
+  const [myOwn, setStatus] = useState<boolean>(false);
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const toast = useToast();
+  const handleClose = useCallback(()=>{
+    toast({
+      title: "Kitty purchased successfully!",
+      status: 'success',
+      isClosable: true,
+      duration: 10000,
+      position: 'top-right'
+    })
+    onClose();
+  }, [])
   return (
     <div className="main">
       <header>
@@ -36,26 +52,41 @@ export const Details = () => {
           <div className="prop"><Text>Gender</Text><Tag colorScheme="red" borderRadius="full">Female</Tag></div>
           <div className="prop"><Text>No. of breedings</Text><Tag colorScheme="blackAlpha" borderRadius="full">3</Tag></div>
         </Stack>
-        <FormControl>
-          <FormLabel>Kitty name</FormLabel>
-          <Input value="Bella" />
-        </FormControl>
-        <Flex mt="8">
-          <FormControl display='flex' alignItems='end'>
-            <Switch id='forSale' mb="2" />
-            <FormLabel htmlFor='forSale' ml="3">
-              For sale?
-            </FormLabel>
-          </FormControl>
+        { myOwn ? (<>
           <FormControl>
-            <FormLabel>Price</FormLabel>
-            <Input value="20" />
+            <FormLabel>Kitty name</FormLabel>
+            <Input value="Bella" />
           </FormControl>
-        </Flex>
-        <Stack mt="6">
-          <Button variant="outline" colorScheme='teal'>Update</Button>
-          <Button type="submit" colorScheme='teal'>Breed</Button>
-        </Stack>
+          <Flex mt="8">
+            <FormControl display='flex' alignItems='end'>
+              <Switch id='forSale' mb="2" />
+              <FormLabel htmlFor='forSale' ml="3">
+                For sale?
+              </FormLabel>
+            </FormControl>
+            <FormControl>
+              <FormLabel>Price</FormLabel>
+              <Input value="20" />
+            </FormControl>
+          </Flex>
+          <Stack mt="6">
+            <Button variant="outline" colorScheme='teal'>Update</Button>
+            <Button type="submit" colorScheme='teal'>Breed</Button>
+          </Stack>
+        </>) : (<>
+          <Stack gap={4}>
+            <FormControl>
+              <FormLabel>Owner</FormLabel>
+              <Input value="0x04c6722d964a98266951...8646" />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Price</FormLabel>
+              <Input value="20" />
+            </FormControl>
+            <Button onClick={onOpen} type="submit" mt={8} colorScheme="teal"><CartIcon /> Buy Now</Button>
+            <BuyModal isOpen={isOpen} onOpen={onOpen} onClose={handleClose} />
+          </Stack>
+        </>) }
       </Container>
     </div>
   )
