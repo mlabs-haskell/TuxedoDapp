@@ -9,7 +9,7 @@ import {
   Heading,
   Divider, FormControl, FormLabel, Textarea, Switch,
   Text,
-} from '@chakra-ui/react'
+} from '@chakra-ui/react';
 
 export const Details = () => {
   return (
