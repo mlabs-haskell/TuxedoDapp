@@ -25,12 +25,8 @@ export const router = createBrowserRouter([
         element: <Breed />,
       },
       {
-        path: "search",
+        index: true,
         element: <Search />,
-      },
-      {
-        path: "test",
-        element: <div>Test</div>,
       },
     ]
   },
