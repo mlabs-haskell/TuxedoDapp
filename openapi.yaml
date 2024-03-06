@@ -29,7 +29,7 @@ paths:
         '405':
           description: Invalid input
   /show-owned-kitties:
-    post:
+    get:
       tags:
         - list
       summary: Get owned kitties

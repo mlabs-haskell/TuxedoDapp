@@ -4,11 +4,11 @@ export type Kitty = {
   name: string;
   gender: 'male' | 'female';
   mom: {
-    DNA: string;
+    dna: string;
     name: string;
   }
   dad: {
-    DNA: string;
+    dna: string;
     name: string;
   }
   breedings: number;// Number of breedings
