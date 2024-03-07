@@ -1,11 +1,13 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import kittiesList from "../features/kittiesList";
-import kittyDetails from "../features/kittiesDetails";
+import kittyDetails from "../features/kittyDetails";
+import walletSlice from "../features/wallet/walletSlice";
 
 export const store = configureStore({
   reducer: {
     kitties: kittiesList,
     kitty: kittyDetails,
+    wallet: walletSlice,
   },
 });
 

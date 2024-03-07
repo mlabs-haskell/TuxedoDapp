@@ -6,9 +6,11 @@ import {
 import { Button, Stack, Container, Flex } from '@chakra-ui/react';
 import {SearchIcon, CartIcon, PersonCircleIcon} from "chakra-ui-ionicons";
 import { WalletSelector } from "../features/wallet";
+import { useAppSelector } from "../app/hooks";
+import { selectAccount } from "../features/wallet/walletSlice";
 
 export const Root = () => {
-  let account = undefined;
+  const account = useAppSelector(selectAccount);
   return (
     <div className="App">
       <header>

@@ -34,36 +34,35 @@ const delay = (delayInms: number) => {
 
 export const MOCK_module = {
   'show-all-kitties': async ()=>{
-    await delay(10);
+    await delay(300);
     return  Array.from({length: 10}, () => generateKitty());
   },
   'show-owned-kitties': async (user?: string)=>{
-    await delay(3000);
-    const arr = Array(10);
-    return arr.map(()=>generateKitty());
+    await delay(300);
+    return Array.from({length: 10}, () => generateKitty({owner: user}));
   },
   'show-balance': async (user?: string)=>{
-    await delay(3000);
+    await delay(300);
     return 100;
   },
   'breed-kitty': async (mom: Partial<Kitty>, dad: Partial<Kitty>)=>{
-    await delay(3000);
+    await delay(300);
     return generateKitty();
   },
   'breed-tradable-kitty': async (mom: Partial<Kitty>, dad: Partial<Kitty>)=>{
-    await delay(3000);
+    await delay(300);
     return generateKitty();
   },
   'set-kitty-property': async (kitty: Kitty)=>{
-    await delay(3000);
+    await delay(300);
     return generateKitty()
   },
   'buy-kitty': async ()=>{
-    await delay(3000);
+    await delay(300);
     return generateKitty();
   },
   'mint-kitty': async ()=>{
-    await delay(3000);
+    await delay(300);
     return generateKitty();
   },
   'mint-tradable-kitty': async ()=>{

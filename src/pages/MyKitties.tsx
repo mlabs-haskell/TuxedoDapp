@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Button,
   Stack,
@@ -18,14 +18,35 @@ import {
   Td,
   Tbody,
   InputGroup, InputLeftElement,
-  Divider
+  Divider, Tooltip,
 } from '@chakra-ui/react'
 import { Link, To, useNavigate } from "react-router-dom";
 import { EggIcon, SearchIcon } from 'chakra-ui-ionicons';
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { getKitties, selectKitties } from "../features/kittiesList";
+import { selectAccount } from "../features/wallet/walletSlice";
+import { setKitty } from "../features/kittyDetails";
+import { Kitty } from "../types";
+
+const colors:Record<string, string>  = {
+  'ready to bread': "pink",
+  'tired': "purple",
+  'had birth recently': "teal",
+};
 
 export const MyKitties = () => {
   const navigate = useNavigate();
-  const handleRowClick = (page: To) => () => {
+  const dispatch = useAppDispatch();
+  const list = useAppSelector(selectKitties);
+  const account = useAppSelector(selectAccount);
+
+
+  useEffect(()=>{
+    if(!account) return;
+    dispatch(getKitties(account.address));
+  },[account])
+  const handleRowClick = (page: To, kitty: Kitty) => () => {
+    dispatch(setKitty(kitty))
     navigate(page);
   };
 
@@ -46,7 +67,6 @@ export const MyKitties = () => {
               </InputGroup>
             </Stack>
           </Flex>
-
         </Container>
       </header>
       <Container maxW="container.lg" mt="2em">
@@ -70,46 +90,24 @@ export const MyKitties = () => {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  <Tr onClick={handleRowClick("/details")}>
-                    <Td>Milo</Td>
-                    <Td>Male</Td>
-                    <Td>None</Td>
-                    <Td>None</Td>
-                    <Td>3</Td>
-                    <Td><Tag colorScheme="teal">Ready to Breed</Tag></Td>
-                    <Td><Tag colorScheme="teal">Yes</Tag></Td>
-                    <Td>$10</Td>
-                  </Tr>
-                  <Tr onClick={handleRowClick("/details")}>
-                    <Td>Bella</Td>
-                    <Td>Female</Td>
-                    <Td>None</Td>
-                    <Td>None</Td>
-                    <Td>3</Td>
-                    <Td><Tag colorScheme="teal">Ready to Breed</Tag></Td>
-                    <Td><Tag colorScheme="teal">Yes</Tag></Td>
-                    <Td>$20</Td>
-                  </Tr>
-                  <Tr onClick={handleRowClick("/details")}>
-                    <Td>Oreo</Td>
-                    <Td>Male</Td>
-                    <Td>None</Td>
-                    <Td>None</Td>
-                    <Td>1</Td>
-                    <Td><Tag colorScheme="orange">Tired</Tag></Td>
-                    <Td><Tag colorScheme="gray">No</Tag></Td>
-                    <Td>None</Td>
-                  </Tr>
-                  <Tr onClick={handleRowClick("/details")}>
-                    <Td>Lily</Td>
-                    <Td>Female</Td>
-                    <Td>None</Td>
-                    <Td>None</Td>
-                    <Td>3</Td>
-                    <Td><Tag colorScheme="gray">Had Birth Recently</Tag></Td>
-                    <Td><Tag colorScheme="gray">No</Tag></Td>
-                    <Td>None</Td>
-                  </Tr>
+                  {list.map(kitty =><Tr key={kitty.dna} onClick={handleRowClick("/details", kitty)}>
+                    <Td>{kitty.name}</Td>
+                    <Td>{kitty.gender}</Td>
+                    <Td>
+                      <Tooltip label={kitty.mom.dna}>
+                        {kitty.mom.name}
+                      </Tooltip>
+                    </Td>
+                    <Td>
+                      <Tooltip label={kitty.dad.dna}>
+                        {kitty.dad.name}
+                      </Tooltip>
+                    </Td>
+                    <Td>{kitty.breedings}</Td>
+                    <Td><Tag colorScheme={colors[kitty.status]}>{kitty.status}</Tag></Td>
+                    <Td><Tag colorScheme={kitty.forSale ? "teal" : "gray"}>{kitty.forSale ? "Yes" : "No"}</Tag></Td>
+                    <Td>${kitty.price}</Td>
+                  </Tr>)}
                 </Tbody>
               </Table>
             </TableContainer>

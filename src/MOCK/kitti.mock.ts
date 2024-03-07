@@ -1,7 +1,7 @@
 import { Kitty } from "../types";
 
-export const generateKitty = ():Kitty => {
-  return {
+export const generateKitty = (setKitty: Partial<Kitty> = {}):Kitty => {
+  return Object.assign({
     owner: `0x${makeid(18)}`,
     dna: makeid(30),
     name: makeid(4),
@@ -18,7 +18,7 @@ export const generateKitty = ():Kitty => {
     forSale: Math.floor(Math.random() * 2) === 1,
     status: ['ready to bread', 'tired', 'had birth recently'][Math.floor(Math.random() * 3)],
     price: Math.floor(Math.random() * 100)
-  };
+  },setKitty);
 };
 
 export const makeid = (length: number) => {

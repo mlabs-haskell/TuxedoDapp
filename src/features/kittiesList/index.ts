@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { Kitty } from "../../types";
+import { MOCK_module} from "../../MOCK/client.mock";
 
 export interface ListState {
   list: Kitty[];
@@ -12,11 +13,14 @@ const initialState: ListState = {
   loading: 'idle',
 };
 
-export const getKitties = createAsyncThunk<Kitty[], void>(
+export const getKitties = createAsyncThunk<Kitty[], string | undefined>(
   'kitties/get',
-  async () => {
-    //const response = await getKitties();
-    return []
+  async (user) => {
+    if (user) {
+      return await MOCK_module["show-owned-kitties"](user);
+    } else {
+      return await MOCK_module["show-all-kitties"]();
+    }
   }
 );
 
@@ -32,7 +36,7 @@ const kittiesSlice = createSlice({
     builder.addCase(getKitties.fulfilled, (state, action) => {
       state.list = action.payload;
     })
-  },
+  }
 })
 //TODO: optimistic search update
 
