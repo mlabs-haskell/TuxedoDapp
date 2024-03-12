@@ -53,7 +53,7 @@ export const MOCK_module = {
     await delay(300);
     return generateKitty();
   },
-  'set-kitty-property': async (kitty: Kitty)=>{
+  'set-kitty-property': async (kitty: Partial<Kitty>)=>{
     await delay(300);
     return generateKitty()
   },

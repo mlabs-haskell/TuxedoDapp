@@ -1,11 +1,11 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { Kitty } from "../../types";
 import { MOCK_module } from "../../MOCK/client.mock";
 
 export interface DetailsState {
-  mom?: Kitty;
-  dad?: Kitty;
+  mom?: Partial<Kitty>;
+  dad?: Partial<Kitty>;
   child?: Kitty;
   loading: 'idle' | 'pending' | 'succeeded' | 'failed'
 }
@@ -17,7 +17,7 @@ const initialState: DetailsState = {
   loading: 'idle',
 };
 
-export const postBreed = createAsyncThunk<Kitty, {mom: Kitty, dad: Kitty}>(
+export const postBreed = createAsyncThunk<Kitty, {mom: Partial<Kitty>, dad: Partial<Kitty>}>(
   'breed/post',
   async ({mom, dad}) => {
     return await MOCK_module["breed-kitty"](mom, dad)
@@ -29,13 +29,13 @@ const breedingSlice = createSlice({
   name: 'breeding',
   initialState,
   reducers: {
-    setMom: (state, action) => {
+    setMom: (state, action: PayloadAction<Partial<Kitty>>) => {
       state.mom = action.payload;
     },
-    setDad: (state, action) => {
+    setDad: (state, action: PayloadAction<Partial<Kitty>>) => {
       state.dad = action.payload;
     },
-    setChild: (state, action) => {
+    setChild: (state, action: PayloadAction<Kitty>) => {
       state.child = action.payload;
     },
     clearMom: (state) => {
