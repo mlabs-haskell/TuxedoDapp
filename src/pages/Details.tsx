@@ -13,10 +13,11 @@ import {
 } from '@chakra-ui/react';
 import { CartIcon } from "chakra-ui-ionicons";
 import { BuyModal } from "../components/BuyModal";
-import { useAppSelector } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { selectKitty } from "../features/kittyDetails";
 import { useNavigate } from "react-router-dom";
 import { selectAccount } from "../features/wallet/walletSlice";
+import { setDad, setMom } from "../features/breeding";
 
 export const Details = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -24,6 +25,7 @@ export const Details = () => {
   const kitty = useAppSelector(selectKitty);
   const account = useAppSelector(selectAccount);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const handleClose = useCallback(()=>{
     toast({
       title: "Kitty purchased successfully!",
@@ -34,6 +36,15 @@ export const Details = () => {
     })
     onClose();
   }, [])
+  const handleBreed = ()=>{
+    if (!kitty) return;
+    if(kitty.gender === 'male'){
+      dispatch(setDad(kitty))
+    }else {
+      dispatch(setMom(kitty))
+    }
+    navigate('/breed')
+  };
   useEffect(()=>{
     if(!kitty) navigate('/')
   },[kitty])
@@ -90,7 +101,7 @@ export const Details = () => {
           </Flex>
           <Stack mt="6">
             <Button variant="outline" colorScheme='teal'>Update</Button>
-            <Button type="submit" colorScheme='teal'>Breed</Button>
+            <Button onClick={handleBreed} type="submit" colorScheme='teal'>Breed</Button>
           </Stack>
         </>) : (<>
           <Stack gap={4}>

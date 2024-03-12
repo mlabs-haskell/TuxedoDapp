@@ -5,7 +5,7 @@ export const generateKitty = (setKitty: Partial<Kitty> = {}):Kitty => {
     owner: `0x${makeid(18)}`,
     dna: makeid(30),
     name: makeid(4),
-    gender: 'male',
+    gender: ['male', 'female'][Math.floor(Math.random() * 2)],
     mom: {
       dna: makeid(30),
       name: makeid(4),
