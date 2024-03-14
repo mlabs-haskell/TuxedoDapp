@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Tag,
   Input,
@@ -20,12 +20,34 @@ import {
 } from '@chakra-ui/react'
 import { To, useNavigate } from "react-router-dom";
 import { SearchIcon } from 'chakra-ui-ionicons';
+import Fuse, { FuseResult } from "fuse.js";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { getKitties, selectKitties } from "../features/kittiesList";
 import { Kitty } from "../types";
 import { setKitty } from "../features/kittyDetails";
 
+const fuseOptions = {
+  // isCaseSensitive: false,
+  // includeScore: false,
+  shouldSort: true,
+  // includeMatches: false,
+  // findAllMatches: false,
+  // minMatchCharLength: 1,
+  // location: 0,
+  threshold: 0.6,
+  // distance: 100,
+  // useExtendedSearch: false,
+  // ignoreLocation: false,
+  // ignoreFieldNorm: false,
+  // fieldNormWeight: 1,
+  keys: [
+    "owner",
+    "name"
+  ]
+};
+let fuse: Fuse<Kitty>;
 export const Search = () => {
+  const [filteredList, setList] = useState<FuseResult<Kitty>[]>([]);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const list = useAppSelector(selectKitties);
@@ -36,13 +58,25 @@ export const Search = () => {
   useEffect(()=>{
     dispatch(getKitties());
   },[])
+  useEffect(()=>{
+    if (list.length < 1) return;
+    fuse = new Fuse(list,fuseOptions)
+    setList(list.map(kitty => ({item: kitty, refIndex: 1})))
+  },[list])
   const colors:Record<string, string>  = {
     'ready to bread': "pink",
     'tired': "purple",
     'had birth recently': "teal",
   }
 
-  // @ts-ignore
+  const handleSearch = (e: React.FormEvent<HTMLInputElement>) => {
+    if (e.currentTarget.value.length > 0) {
+      setList(fuse.search(e.currentTarget.value));
+    } else {
+      setList(list.map(kitty => ({item: kitty, refIndex: 1})))
+    }
+  }
+
   return (
     <div className="main">
       <header>
@@ -53,7 +87,7 @@ export const Search = () => {
               <InputLeftElement pointerEvents='none'>
                 <SearchIcon />
               </InputLeftElement>
-              <Input type='search' placeholder='Input the public key of the seller (e.g., "ABC")' />
+              <Input onInput={handleSearch} type='search' placeholder='Input the public key of the seller (e.g., "ABC")' />
             </InputGroup>
           </Flex>
 
@@ -82,29 +116,30 @@ export const Search = () => {
                 </Thead>
                 <Tbody>
                   {
-                    list.map(kitty=> (
-                      <Tr key={kitty.dna} onClick={handleRowClick("/details", kitty)}>
+                    filteredList
+                      .map(({item})=> (
+                      <Tr key={item.dna} onClick={handleRowClick("/details", item)}>
                         <Td>
-                          <Tooltip label={kitty.owner}>
-                            {`0x..${kitty.owner!.slice(-4,-1)}`}
+                          <Tooltip label={item.owner}>
+                            {`0x..${item.owner!.slice(-4,-1)}`}
                           </Tooltip>
                         </Td>
-                        <Td>{kitty.name}</Td>
-                        <Td>{kitty.gender}</Td>
+                        <Td>{item.name}</Td>
+                        <Td>{item.gender}</Td>
                         <Td>
-                          <Tooltip label={kitty.mom.dna}>
-                            {kitty.mom.name}
+                          <Tooltip label={item.mom.dna}>
+                            {item.mom.name}
                           </Tooltip>
                         </Td>
                         <Td>
-                          <Tooltip label={kitty.dad.dna}>
-                            {kitty.dad.name}
+                          <Tooltip label={item.dad.dna}>
+                            {item.dad.name}
                           </Tooltip>
                         </Td>
-                        <Td>{kitty.breedings}</Td>
-                        <Td><Tag colorScheme={colors[kitty.status]}>{kitty.status}</Tag></Td>
-                        <Td><Tag colorScheme={kitty.forSale ? "teal" : "gray"}>{kitty.forSale ? "Yes" : "No"}</Tag></Td>
-                        <Td>${kitty.price}</Td>
+                        <Td>{item.breedings}</Td>
+                        <Td><Tag colorScheme={colors[item.status]}>{item.status}</Tag></Td>
+                        <Td><Tag colorScheme={item.forSale ? "teal" : "gray"}>{item.forSale ? "Yes" : "No"}</Tag></Td>
+                        <Td>${item.price}</Td>
                       </Tr>
                     ))
                   }
