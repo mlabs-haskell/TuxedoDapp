@@ -1,4 +1,5 @@
 import { generateKitty } from "./kitti.mock";
+import { generateCoins } from "./coin.mock";
 import { Kitty } from "../types";
 
 const importObject = {
@@ -66,7 +67,11 @@ export const MOCK_module = {
     return generateKitty();
   },
   'mint-tradable-kitty': async ()=>{
-    await delay(3000);
+    await delay(300);
     return generateKitty();
+  },
+  'get-coins': async (user: string)=>{
+    await delay(300);
+    return generateCoins(5);
   },
 };

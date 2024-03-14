@@ -3,6 +3,7 @@ import kittiesList from "../features/kittiesList";
 import kittyDetails from "../features/kittyDetails";
 import walletSlice from "../features/wallet/walletSlice";
 import breedingSlice from "../features/breeding";
+import tradingSlice from "../features/trade";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     kitty: kittyDetails,
     wallet: walletSlice,
     breeding: breedingSlice,
+    trading: tradingSlice,
   },
 });
 

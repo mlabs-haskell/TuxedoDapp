@@ -16,3 +16,8 @@ export type Kitty = {
   forSale: boolean;
   price?: number;
 };
+
+export type Coin = {
+  hash: string;
+  value: number;
+}
