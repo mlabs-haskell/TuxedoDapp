@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Stack,
@@ -27,18 +27,20 @@ import { getKitties, selectKitties } from "../features/kittiesList";
 import { selectAccount } from "../features/wallet/walletSlice";
 import { setKitty } from "../features/kittyDetails";
 import { Kitty } from "../types";
+import Fuse, { FuseResult } from "fuse.js";
 
 const colors:Record<string, string>  = {
   'ready to bread': "pink",
   'tired': "purple",
   'had birth recently': "teal",
 };
-
+let fuse: Fuse<Kitty>;
 export const MyKitties = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const list = useAppSelector(selectKitties);
   const account = useAppSelector(selectAccount);
+  const [filteredList, setList] = useState<FuseResult<Kitty>[]>([]);
 
 
   useEffect(()=>{
@@ -49,6 +51,18 @@ export const MyKitties = () => {
     dispatch(setKitty(kitty))
     navigate(page);
   };
+  useEffect(()=>{
+    if (list.length < 1) return;
+    fuse = new Fuse(list,{shouldSort: true, keys: ['name', 'hash', 'status', 'forSale']})
+    setList(list.map(kitty => ({item: kitty, refIndex: 1})))
+  },[list])
+  const handleSearch = (e: React.FormEvent<HTMLInputElement>) => {
+    if (e.currentTarget.value.length > 0) {
+      setList(fuse.search(e.currentTarget.value));
+    } else {
+      setList(list.map(kitty => ({item: kitty, refIndex: 1})))
+    }
+  }
 
   return (
     <div className="main">
@@ -63,7 +77,7 @@ export const MyKitties = () => {
                 <InputLeftElement pointerEvents='none'>
                   <SearchIcon />
                 </InputLeftElement>
-                <Input type='search' placeholder='Find' />
+                <Input onInput={handleSearch} type='search' placeholder='Find' />
               </InputGroup>
             </Stack>
           </Flex>
@@ -90,23 +104,23 @@ export const MyKitties = () => {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {list.map(kitty =><Tr key={kitty.dna} onClick={handleRowClick("/details", kitty)}>
-                    <Td>{kitty.name}</Td>
-                    <Td>{kitty.gender}</Td>
+                  {filteredList.map(({item}) =><Tr key={item.dna} onClick={handleRowClick("/details", item)}>
+                    <Td>{item.name}</Td>
+                    <Td>{item.gender}</Td>
                     <Td>
-                      <Tooltip label={kitty.mom.dna}>
-                        {kitty.mom.name}
+                      <Tooltip label={item.mom.dna}>
+                        {item.mom.name}
                       </Tooltip>
                     </Td>
                     <Td>
-                      <Tooltip label={kitty.dad.dna}>
-                        {kitty.dad.name}
+                      <Tooltip label={item.dad.dna}>
+                        {item.dad.name}
                       </Tooltip>
                     </Td>
-                    <Td>{kitty.breedings}</Td>
-                    <Td><Tag colorScheme={colors[kitty.status]}>{kitty.status}</Tag></Td>
-                    <Td><Tag colorScheme={kitty.forSale ? "teal" : "gray"}>{kitty.forSale ? "Yes" : "No"}</Tag></Td>
-                    <Td>${kitty.price}</Td>
+                    <Td>{item.breedings}</Td>
+                    <Td><Tag colorScheme={colors[item.status]}>{item.status}</Tag></Td>
+                    <Td><Tag colorScheme={item.forSale ? "teal" : "gray"}>{item.forSale ? "Yes" : "No"}</Tag></Td>
+                    <Td>${item.price}</Td>
                   </Tr>)}
                 </Tbody>
               </Table>
