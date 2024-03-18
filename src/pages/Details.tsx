@@ -9,7 +9,7 @@ import {
   Heading,
   Divider, FormControl, FormLabel, Textarea, Switch,
   Text,
-  useDisclosure, useToast,
+  useDisclosure, useToast, Image,
 } from '@chakra-ui/react';
 import { CartIcon } from "chakra-ui-ionicons";
 import { BuyModal } from "../components/BuyModal";
@@ -38,7 +38,7 @@ export const Details = () => {
   }, [])
   const handleBreed = ()=>{
     if (!kitty) return;
-    if(kitty.gender === 'male'){
+    if(kitty?.gender === 'male'){
       dispatch(setDad(kitty))
     }else {
       dispatch(setMom(kitty))
@@ -60,17 +60,8 @@ export const Details = () => {
   };
 
   useEffect(()=>{
-    if(!kitty) navigate('/')
+    if(!kitty || !kitty?.name) navigate('/');
   },[kitty])
-  if (!kitty) return <div className="main">
-    <header>
-      <Container  maxW="container.lg">
-        <Flex>
-          <Heading as="h1" size="lg">No kitty</Heading>
-        </Flex>
-      </Container>
-    </header>
-  </div>
 
   return (
     <div className="main">
@@ -85,32 +76,35 @@ export const Details = () => {
         <Divider />
       </Container>
       <Container maxW="container.sm" mt="2em">
-        <Heading as="h2" size="xl" mb="10">{kitty.name}</Heading>
+        <Heading as="h2" size="xl" mb="10">{kitty?.name}</Heading>
+        <Flex justifyContent="center" w="100%" mb={3}>
+          <Image src={`https://cat-avatars.vercel.app/api/cat?name=${kitty?.dna}`} alt={kitty?.name}/>
+        </Flex>
         <FormControl>
           <FormLabel>Kitty DNA</FormLabel>
-          <Textarea variant="filled" value={kitty.dna} isReadOnly={true} />
+          <Textarea variant="filled" value={kitty?.dna} isReadOnly={true} />
         </FormControl>
         <Stack direction="row" gap="6" textAlign="center" mt="10" mb="10">
           <div className="prop"><Text>Mom</Text><Tag colorScheme="pink" borderRadius="full">{kitty?.mom?.name}</Tag></div>
           <div className="prop"><Text>Dad</Text><Tag colorScheme="blue" borderRadius="full">{kitty?.dad?.name}</Tag></div>
-          <div className="prop"><Text>Gender</Text><Tag colorScheme={kitty.gender === 'male' ? 'blue' : 'red'} borderRadius="full">{kitty.gender}</Tag></div>
-          <div className="prop"><Text>No. of breedings</Text><Tag colorScheme="blackAlpha" borderRadius="full">{kitty.breedings}</Tag></div>
+          <div className="prop"><Text>Gender</Text><Tag colorScheme={kitty?.gender === 'male' ? 'blue' : 'red'} borderRadius="full">{kitty?.gender}</Tag></div>
+          <div className="prop"><Text>No. of breedings</Text><Tag colorScheme="blackAlpha" borderRadius="full">{kitty?.breedings}</Tag></div>
         </Stack>
-        { kitty.owner === account!.address ? (<>
+        { kitty?.owner === account!.address ? (<>
           <FormControl>
             <FormLabel>Kitty name</FormLabel>
-            <Input onInput={handleNameInput} value={kitty.name} />
+            <Input onInput={handleNameInput} value={kitty?.name} />
           </FormControl>
           <Flex mt="8">
             <FormControl display='flex' alignItems='end'>
-              <Switch onChange={handleSaleToggle} id='forSale' mb="2" isChecked={kitty.forSale} />
+              <Switch onChange={handleSaleToggle} id='forSale' mb="2" isChecked={kitty?.forSale} />
               <FormLabel htmlFor='forSale' ml="3">
                 For sale?
               </FormLabel>
             </FormControl>
             <FormControl>
               <FormLabel>Price</FormLabel>
-              <Input type="number" onInput={handlePriceInput} value={kitty.price} />
+              <Input type="number" onInput={handlePriceInput} value={kitty?.price} />
             </FormControl>
           </Flex>
           <Stack mt="6">
@@ -121,11 +115,11 @@ export const Details = () => {
           <Stack gap={4}>
             <FormControl>
               <FormLabel>Owner</FormLabel>
-              <Input readOnly value={kitty.owner} />
+              <Input readOnly value={kitty?.owner} />
             </FormControl>
             <FormControl>
               <FormLabel>Price</FormLabel>
-              <Input readOnly value={kitty.price} />
+              <Input readOnly value={kitty?.price} />
             </FormControl>
             <Button onClick={onOpen} type="submit" mt={8} colorScheme="teal"><CartIcon /> Buy Now</Button>
             <BuyModal isOpen={isOpen} onOpen={onOpen} onClose={handleClose} />
