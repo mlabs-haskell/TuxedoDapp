@@ -9,7 +9,7 @@ import {
   Heading,
   Divider, FormControl, FormLabel, Textarea, Switch,
   Text,
-  useDisclosure, useToast, Image,
+  useDisclosure, useToast,
 } from '@chakra-ui/react';
 import { CartIcon } from "chakra-ui-ionicons";
 import { BuyModal } from "../components/BuyModal";
@@ -18,6 +18,7 @@ import { postKitty, selectKitty, setKitty } from "../features/kittyDetails";
 import { useNavigate } from "react-router-dom";
 import { selectAccount } from "../features/wallet/walletSlice";
 import { setDad, setMom } from "../features/breeding";
+import { KittyAvatar } from "../components/Avatar";
 
 export const Details = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -78,7 +79,7 @@ export const Details = () => {
       <Container maxW="container.sm" mt="2em">
         <Heading as="h2" size="xl" mb="10">{kitty?.name}</Heading>
         <Flex justifyContent="center" w="100%" mb={3}>
-          <Image src={`https://cat-avatars.vercel.app/api/cat?name=${kitty?.dna}`} alt={kitty?.name}/>
+          <KittyAvatar dna={kitty?.dna!} />
         </Flex>
         <FormControl>
           <FormLabel>Kitty DNA</FormLabel>
@@ -90,7 +91,7 @@ export const Details = () => {
           <div className="prop"><Text>Gender</Text><Tag colorScheme={kitty?.gender === 'male' ? 'blue' : 'red'} borderRadius="full">{kitty?.gender}</Tag></div>
           <div className="prop"><Text>No. of breedings</Text><Tag colorScheme="blackAlpha" borderRadius="full">{kitty?.breedings}</Tag></div>
         </Stack>
-        { kitty?.owner === account!.address ? (<>
+        { kitty?.owner === account?.address ? (<>
           <FormControl>
             <FormLabel>Kitty name</FormLabel>
             <Input onInput={handleNameInput} value={kitty?.name} />
