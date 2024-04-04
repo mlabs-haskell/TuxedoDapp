@@ -34,14 +34,13 @@ const colors:Record<string, string>  = {
   'tired': "purple",
   'had birth recently': "teal",
 };
-let fuse: Fuse<Kitty>;
 export const MyKitties = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const list = useAppSelector(selectKitties);
   const account = useAppSelector(selectAccount);
   const [filteredList, setList] = useState<FuseResult<Kitty>[]>([]);
-
+  const fuse = new Fuse(list,{shouldSort: true, keys: ['name', 'hash', 'status', 'forSale']})
 
   useEffect(()=>{
     if(!account) return;
@@ -52,8 +51,6 @@ export const MyKitties = () => {
     navigate(page);
   };
   useEffect(()=>{
-    if (list.length < 1) return;
-    fuse = new Fuse(list,{shouldSort: true, keys: ['name', 'hash', 'status', 'forSale']})
     setList(list.map(kitty => ({item: kitty, refIndex: 1})))
   },[list])
   const handleSearch = (e: React.FormEvent<HTMLInputElement>) => {
@@ -104,23 +101,23 @@ export const MyKitties = () => {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {filteredList.map(({item}) =><Tr key={item.dna} onClick={handleRowClick("/details", item)}>
-                    <Td>{item.name}</Td>
-                    <Td>{item.gender}</Td>
+                  {filteredList.map(({item}) =><Tr key={item?.dna} onClick={handleRowClick("/details", item)}>
+                    <Td>{item?.name}</Td>
+                    <Td>{item?.gender}</Td>
                     <Td>
-                      <Tooltip label={item.mom.dna}>
-                        {item.mom.name}
+                      <Tooltip label={item?.mom?.dna}>
+                        {item?.mom?.name || ''}
                       </Tooltip>
                     </Td>
                     <Td>
-                      <Tooltip label={item.dad.dna}>
-                        {item.dad.name}
+                      <Tooltip label={item?.dad?.dna}>
+                        {item?.dad?.name || ''}
                       </Tooltip>
                     </Td>
-                    <Td>{item.breedings}</Td>
-                    <Td><Tag colorScheme={colors[item.status]}>{item.status}</Tag></Td>
-                    <Td><Tag colorScheme={item.forSale ? "teal" : "gray"}>{item.forSale ? "Yes" : "No"}</Tag></Td>
-                    <Td>${item.price}</Td>
+                    <Td>{item?.breedings}</Td>
+                    <Td><Tag colorScheme={colors[item?.status]}>{item?.status}</Tag></Td>
+                    <Td><Tag colorScheme={item?.forSale ? "teal" : "gray"}>{item?.forSale ? "Yes" : "No"}</Tag></Td>
+                    <Td>${item?.price}</Td>
                   </Tr>)}
                 </Tbody>
               </Table>

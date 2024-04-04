@@ -1,12 +1,15 @@
-import React from "react";
-import { useToast } from "@chakra-ui/react";
+import React, { useEffect } from "react";
+import { useToast, CircularProgress } from "@chakra-ui/react";
 import {
   getWallets,
   Wallet,
   WalletAccount,
 } from '@talismn/connect-wallets';
 import { useAppDispatch } from "../../app/hooks";
-import { login } from "./walletSlice";
+import { connect, login } from "./walletSlice";
+import { api } from "../../api/client";
+import { getCoins, setCoins } from "../trade";
+import { getKitties } from "../kittiesList";
 
 const DAPP_NAME = process.env.REACT_APP_DAPP_NAME || "development";
 const SUPPORTED_WALLETS = ["Talisman"];
@@ -21,52 +24,78 @@ const talismanWallet = installedWallets.find(wallet => wallet.extensionName === 
 export const WalletSelector = () => {
   const dispatch = useAppDispatch();
   const toast = useToast();
-  if (talismanWallet) {
-    ((talismanWallet as Wallet).enable(DAPP_NAME) as Promise<unknown>).then(() => {
-      talismanWallet.subscribeAccounts((accounts) => {
-        if (!accounts) return;//TODO: handle error
-        dispatch(login({
-          address: accounts[0].address,
-          source: accounts[0].source,
-          name: accounts[0].name
-        }))
-      })
-    })
-  }
-  return <div>Connecting wallet...</div>
-  // return (
-  //   <div>
-  //     {supportedWallets.filter(chooseWallets).map((wallet: Wallet) =>
-  //       <>
-  //       <Button
-  //         key={wallet.extensionName}
-  //         onClick={async () => {
-  //           try {
-  //             await wallet.enable(DAPP_NAME);
-  //             const subscribe = (accounts?: WalletAccount[]) => {
-  //               console.log(wallet.getAccounts())
-  //               if (!accounts) return
-  //               dispatch(login(accounts[0]))
-  //               return accounts
-  //             };
-  //             //const unsubscribe = await wallet.subscribeAccounts(subscribe);
-  //             subscribe();
-  //           } catch (err) {
-  //             toast({
-  //               title: "Wallet error",
-  //               status: 'error',
-  //               description: err as string,
-  //               isClosable: true,
-  //               duration: 10000,
-  //               position: 'top-right'
-  //             })
-  //           }
-  //         }}
-  //       >
-  //         Connect to {wallet.title}
-  //       </Button>
-  //         </>
-  //     )}
-  //   </div>
-  // );
+  //start connecting to talisman
+  useEffect(()=>{
+    const fetchData = async () => {
+      toast({
+        title: 'Talisman connecting',
+        description: 'Getting your information from Tuxedo',
+        status: 'info',
+        duration: 4000,
+        isClosable: true,
+      });
+      if (talismanWallet) {
+        await talismanWallet.enable(DAPP_NAME);
+        talismanWallet.subscribeAccounts(async (accounts) => {
+          if (!accounts) {
+            toast({
+              title: 'Error',
+              description: 'No accounts found',
+              status: 'error',
+              duration: 4000,
+              isClosable: true,
+            })
+            return;
+          }
+          //check if it's first connect
+          for (const account of accounts) {
+            const coins = await dispatch(getKitties(account.address));
+            const kitties = await dispatch(getCoins(account.address));
+            //if it's first connect
+            if(!coins && !kitties){
+              //TODO: kitty name generator
+              await Promise.all([
+                api["mint-kitty"]('gen', account.address),
+                api["mint-coins"](account.address, 600)
+              ])
+            }
+          }
+
+          //finish connecting
+          toast({
+            title: 'Talisman connected',
+            description: `Accounts: ${accounts.map(account =>account.name).join(' ,')} are connected`,
+            status: 'success',
+            duration: 4000,
+            isClosable: true,
+          })
+          //each account has its own signer, and it can't be saved to store
+          //maybe need to use other api to access it
+          // @ts-ignore
+          window.accounts = accounts;
+          dispatch(login(accounts.map(account =>({
+            address: account.address,
+            source: account.source,
+            name: account.name
+          }))));
+          dispatch(connect());
+        })
+      }
+    }
+
+    fetchData()
+      .catch(error => {
+        toast({
+          title: 'Talisman connecting',
+          description: error,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        })
+      });
+  },[]);
+
+
+
+  return <div>Connecting wallet...<CircularProgress isIndeterminate color='green.300' /></div>
 }

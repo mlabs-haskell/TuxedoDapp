@@ -1,7 +1,9 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { Kitty } from "../../types";
-import { MOCK_module} from "../../MOCK/client.mock";
+import { api } from "../../api/client";
+import { transformKittyForUi } from "../../api/utils";
+
 
 export interface ListState {
   list: Kitty[];
@@ -13,13 +15,18 @@ const initialState: ListState = {
   loading: 'idle',
 };
 
-export const getKitties = createAsyncThunk<Kitty[], string | undefined>(
+type Payload = {
+  message: string,
+  kitty_list: any[]
+};
+
+export const getKitties = createAsyncThunk<Payload, string | undefined>(
   'kitties/get',
   async (user) => {
     if (user) {
-      return await MOCK_module["show-owned-kitties"](user);
+      return await api["show-owned-kitties"](user);
     } else {
-      return await MOCK_module["show-all-kitties"]();
+      return await api["show-all-kitties"]();
     }
   }
 );
@@ -32,15 +39,17 @@ const kittiesSlice = createSlice({
     // standard reducer logic, with auto-generated action types per reducer
   },
   extraReducers: (builder) => {
-    // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(getKitties.fulfilled, (state, action) => {
-      state.list = action.payload;
+      //TODO: handle errors
+      console.log(action.payload.message)
+      state.list = action.payload?.kitty_list.map(transformKittyForUi);
+      state.loading = 'succeeded'
     })
   }
 })
-//TODO: optimistic search update
 
 export const selectKitties = (state: RootState) => state.kitties.list;
+export const selectStatus = (state: RootState) => state.kitties.loading;
 
 
 export default kittiesSlice.reducer;

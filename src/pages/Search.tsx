@@ -16,13 +16,13 @@ import {
   Tbody,
   InputGroup, InputLeftElement,
   Divider,
-  Tooltip
+  Tooltip, CircularProgress,
 } from '@chakra-ui/react'
 import { To, useNavigate } from "react-router-dom";
 import { SearchIcon } from 'chakra-ui-ionicons';
 import Fuse, { FuseResult } from "fuse.js";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { getKitties, selectKitties } from "../features/kittiesList";
+import { getKitties, selectKitties, selectStatus } from "../features/kittiesList";
 import { Kitty } from "../types";
 import { setKitty } from "../features/kittyDetails";
 
@@ -41,16 +41,16 @@ const fuseOptions = {
   // ignoreFieldNorm: false,
   // fieldNormWeight: 1,
   keys: [
-    "owner",
     "name"
   ]
 };
-let fuse: Fuse<Kitty>;
 export const Search = () => {
   const [filteredList, setList] = useState<FuseResult<Kitty>[]>([]);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const list = useAppSelector(selectKitties);
+  const loading = useAppSelector(selectStatus)
+  const fuse = new Fuse(list,fuseOptions);
   const handleRowClick = (page: To, kitty: Kitty) => () => {
     dispatch(setKitty(kitty))
     navigate(page);
@@ -59,12 +59,10 @@ export const Search = () => {
     dispatch(getKitties());
   },[])
   useEffect(()=>{
-    if (list.length < 1) return;
-    fuse = new Fuse(list,fuseOptions)
     setList(list.map(kitty => ({item: kitty, refIndex: 1})))
   },[list])
   const colors:Record<string, string>  = {
-    'ready to bread': "pink",
+    'RearinToGo': "pink",
     'tired': "purple",
     'had birth recently': "teal",
   }
@@ -118,34 +116,35 @@ export const Search = () => {
                   {
                     filteredList
                       .map(({item})=> (
-                      <Tr key={item.dna} onClick={handleRowClick("/details", item)}>
+                      <Tr key={item?.dna} onClick={handleRowClick("/details", item)}>
                         <Td>
-                          <Tooltip label={item.owner}>
-                            {`0x..${item.owner!.slice(-4,-1)}`}
+                          <Tooltip label={item?.owner}>
+                            {`0x..${item?.owner?.slice(-4,-1) || ''}`}
                           </Tooltip>
                         </Td>
-                        <Td>{item.name}</Td>
-                        <Td>{item.gender}</Td>
+                        <Td>{item?.name}</Td>
+                        <Td>{item?.gender}</Td>
                         <Td>
-                          <Tooltip label={item.mom.dna}>
-                            {item.mom.name}
+                          <Tooltip label={item?.mom?.dna}>
+                            {item?.mom?.name || ''}
                           </Tooltip>
                         </Td>
                         <Td>
-                          <Tooltip label={item.dad.dna}>
-                            {item.dad.name}
+                          <Tooltip label={item?.dad?.dna}>
+                            {item?.dad?.name || ''}
                           </Tooltip>
                         </Td>
-                        <Td>{item.breedings}</Td>
-                        <Td><Tag colorScheme={colors[item.status]}>{item.status}</Tag></Td>
-                        <Td><Tag colorScheme={item.forSale ? "teal" : "gray"}>{item.forSale ? "Yes" : "No"}</Tag></Td>
-                        <Td>${item.price}</Td>
+                        <Td>{item?.breedings}</Td>
+                        <Td><Tag colorScheme={colors[item?.status]}>{item?.status}</Tag></Td>
+                        <Td><Tag colorScheme={item?.forSale ? "teal" : "gray"}>{item?.forSale ? "Yes" : "No"}</Tag></Td>
+                        <Td>{item?.price ? `$${item?.price}` : '-'}</Td>
                       </Tr>
                     ))
                   }
                 </Tbody>
               </Table>
             </TableContainer>
+            <Flex justifyContent="center">{loading === 'idle' && <CircularProgress isIndeterminate color='green.300' /> }</Flex>
           </GridItem>
         </Grid>
       </Container>
