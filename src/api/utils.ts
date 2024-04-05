@@ -55,3 +55,7 @@ export const transformKittyForUi = (data: any): Kitty => {
 export const sign = (transaction: unknown): unknown => {
   return transaction;
 }
+export const cut0x = (key: string): string => {
+  if (key[0] === '0' && key[1] === 'x') return key.slice(2);
+  return key;
+};

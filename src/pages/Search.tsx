@@ -146,7 +146,7 @@ export const Search = () => {
               </Table>
             </TableContainer>
             <Flex justifyContent="center">
-              {loading === 'idle' && <CircularProgress isIndeterminate color='green.300' /> }
+              {loading === 'idle' && <CircularProgress isIndeterminate color='teal' /> }
               {!!error && error}
             </Flex>
           </GridItem>

@@ -3,13 +3,14 @@ import { useToast, CircularProgress } from "@chakra-ui/react";
 import {
   getWallets,
   Wallet,
-  WalletAccount,
 } from '@talismn/connect-wallets';
 import { useAppDispatch } from "../../app/hooks";
 import { connect, login } from "./walletSlice";
 import { api } from "../../api/client";
 import { getCoins, setCoins } from "../trade";
 import { getKitties } from "../kittiesList";
+import { decodeAddress } from "@polkadot/keyring";
+import { u8aToHex } from "@polkadot/util";
 
 const DAPP_NAME = process.env.REACT_APP_DAPP_NAME || "development";
 const SUPPORTED_WALLETS = ["Talisman"];
@@ -49,14 +50,15 @@ export const WalletSelector = () => {
           }
           //check if it's first connect
           for (const account of accounts) {
-            const coins = await dispatch(getKitties(account.address));
-            const kitties = await dispatch(getCoins(account.address));
+            const key = u8aToHex(decodeAddress(account.address));
+            const coins = await dispatch(getKitties(key));
+            const kitties = await dispatch(getCoins(key));
             //if it's first connect
             if(!coins && !kitties){
               //TODO: kitty name generator
               await Promise.all([
-                api["mint-kitty"]('gen', account.address),
-                api["mint-coins"](account.address, 600)
+                api["mint-kitty"]('gene', key),
+                api["mint-coins"](key, 600)
               ])
             }
           }
@@ -76,7 +78,8 @@ export const WalletSelector = () => {
           dispatch(login(accounts.map(account =>({
             address: account.address,
             source: account.source,
-            name: account.name
+            name: account.name,
+            key: u8aToHex(decodeAddress(account.address))
           }))));
           dispatch(connect());
         })
@@ -97,5 +100,5 @@ export const WalletSelector = () => {
 
 
 
-  return <div>Connecting wallet...<CircularProgress isIndeterminate color='green.300' /></div>
+  return <div>Connecting wallet...<CircularProgress isIndeterminate color='teal' /></div>
 }

@@ -4,9 +4,9 @@ import {
   WalletAccount,
 } from '@talismn/connect-wallets';
 
-
+type wallet = WalletAccount & {key: string};
 export interface WalletState {
-  accounts?: WalletAccount[];
+  accounts?:wallet[];
   isConnected: boolean;
 }
 
@@ -20,7 +20,7 @@ const walletSlice = createSlice({
   name: 'wallet',
   initialState,
   reducers: {
-    login: (state, action: PayloadAction<WalletAccount[]>) => {
+    login: (state, action: PayloadAction<wallet[]>) => {
       state.accounts = action.payload;
     },
     logout: (state) => {

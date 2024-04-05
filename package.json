@@ -6,6 +6,8 @@
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
+    "@polkadot/keyring": "^12.6.2",
+    "@polkadot/util": "^12.6.2",
     "@reduxjs/toolkit": "^1.9.7",
     "@talisman-connect/ui": "^1.1.1",
     "@talisman-connect/wallets": "^1.1.3",

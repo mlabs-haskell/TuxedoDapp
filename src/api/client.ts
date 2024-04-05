@@ -1,5 +1,5 @@
 import { Kitty } from "../types";
-import { apiCall, sign, transformKittyForUi } from "./utils";
+import { apiCall, cut0x, sign } from "./utils";
 
 export const api = {
   'show-all-kitties': async ()=>{
@@ -7,7 +7,7 @@ export const api = {
   },
   'show-owned-kitties': async (user: string)=>{
     return await apiCall('get-owned-kitty-list', 'GET',
-      {'owner_public_key': user })
+      {'owner_public_key': cut0x(user) })
   },
   'get-kitty': async (dna:Pick<Kitty, 'dna'>)=>{
     //its either tradable or non-tradable kitty
@@ -110,17 +110,17 @@ export const api = {
     //$ curl -X POST -H "Content-Type: application/json" -d '{"name": "amit","owner_public_key":"d2bf4b844dfefd6772a8843e669f943408966a977e3ae2af1dd78e0f55f4df67"}' http://localhost:3000/create-kitty
     return await apiCall('create-kitty', 'POST', {}, {
       'name': name,
-      'owner_public_key': user
+      'owner_public_key': cut0x(user)
     });
   },
   'get-coins': async (user: string)=>{
     //$ curl -X GET -H "Content-Type: application/json" -H "owner_public_key:
     // d2bf4b844dfefd6772a8843e669f943408966a977e3ae2af1dd78e0f55f4df67" http://localhost:3000/get-owned-coins
-    return await apiCall('get-owned-coins', 'GET', {'owner_public_key': user})
+    return await apiCall('get-owned-coins', 'GET', {'owner_public_key': cut0x(user)})
   },
   'mint-coins': async (user: string, amount: number)=>{
     //should be called on first account connect
     //$ curl -X POST -H "Content-Type: application/json" -d '{"amount": 6000,"owner_public_key":"d2bf4b844dfefd6772a8843e669f943408966a977e3ae2af1dd78e0f55f4df67"}' http://localhost:3000/mint-coins
-    return await apiCall('mint-coins', 'POST', {}, {'amount': amount, 'owner_public_key': user});
+    return await apiCall('mint-coins', 'POST', {}, {'amount': amount, 'owner_public_key': cut0x(user)});
   },
 };
