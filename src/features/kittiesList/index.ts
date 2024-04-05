@@ -18,7 +18,7 @@ const initialState: ListState = {
 
 type Payload = {
   message: string,
-  kitty_list: any[]
+  owner_kitty_list: any[]
 };
 
 export const getKitties = createAsyncThunk<Payload, string | undefined>(
@@ -44,11 +44,11 @@ const kittiesSlice = createSlice({
       if (action.payload?.message?.toLowerCase().includes('error')) {
         state.error = action.payload.message
       }
-      if (!action.payload?.kitty_list) {
+      if (!action.payload?.owner_kitty_list) {
         state.loading = 'failed';
         return;
       }
-      state.list = action.payload?.kitty_list.map(transformKittyForUi);
+      state.list = action.payload?.owner_kitty_list.map(transformKittyForUi);
       state.loading = 'succeeded'
       state.error = undefined;
     })

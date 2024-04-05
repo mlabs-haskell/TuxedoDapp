@@ -52,11 +52,15 @@ export const WalletSelector = () => {
           for (const account of accounts) {
             const key = u8aToHex(decodeAddress(account.address));
             const coins = await dispatch(getKitties(key));
+            // @ts-ignore
+            const hasCoins = !coins?.payload?.message?.toLowerCase()?.includes('error');
             const kitties = await dispatch(getCoins(key));
+            // @ts-ignore
+            const hasKitties = !kitties?.payload?.message?.toLowerCase()?.includes('error');
             //if it's first connect
-            if(!coins && !kitties){
+            if(!hasCoins && !hasKitties){
               //TODO: kitty name generator
-              await Promise.all([
+              await Promise.allSettled([
                 api["mint-kitty"]('gene', key),
                 api["mint-coins"](key, 600)
               ])

@@ -44,7 +44,7 @@ export const MyKitties = () => {
 
   useEffect(()=>{
     if(!account) return;
-    dispatch(getKitties(account.address));
+    dispatch(getKitties(account.key));
   },[account])
   const handleRowClick = (page: To, kitty: Kitty) => () => {
     dispatch(setKitty(kitty))

@@ -108,8 +108,7 @@ export const api = {
   'mint-kitty': async (name: string, user: string)=>{
     // should be called on first entry
     // check if this is reentry by checking for kitties?
-    //$ curl -X POST -H "Content-Type: application/json" -d '{"name": "amit","owner_public_key":"d2bf4b844dfefd6772a8843e669f943408966a977e3ae2af1dd78e0f55f4df67"}' http://localhost:3000/create-kitty
-    return await apiCall('create-kitty', 'POST', {}, {
+    return await apiCall('post-create-kitty', 'POST', {}, {
       'name': name,
       'owner_public_key': cut0x(user)
     });
@@ -121,7 +120,6 @@ export const api = {
   },
   'mint-coins': async (user: string, amount: number)=>{
     //should be called on first account connect
-    //$ curl -X POST -H "Content-Type: application/json" -d '{"amount": 6000,"owner_public_key":"d2bf4b844dfefd6772a8843e669f943408966a977e3ae2af1dd78e0f55f4df67"}' http://localhost:3000/mint-coins
-    return await apiCall('mint-coins', 'POST', {}, {'amount': amount, 'owner_public_key': cut0x(user)});
+    return await apiCall('post-mint-coin', 'POST', {}, {'amount': amount, 'owner_public_key': cut0x(user)});
   },
 };

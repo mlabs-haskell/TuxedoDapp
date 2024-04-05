@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { Coin } from "../../types";
 import { MOCK_module } from "../../MOCK/client.mock";
+import { api } from "../../api/client";
 
 export interface DetailsState {
   coins: Coin[],
@@ -17,7 +18,7 @@ const initialState: DetailsState = {
 export const getCoins = createAsyncThunk<Coin[], string>(
   'coins/get',
   async (user) => {
-    return await MOCK_module["get-coins"](user)
+    return await api["get-coins"](user)
   }
 );
 

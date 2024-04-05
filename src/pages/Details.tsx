@@ -83,7 +83,7 @@ export const Details = () => {
       <Container maxW="container.sm" mt="2em">
         <Heading as="h2" size="xl" mb="10">{kitty?.name}</Heading>
         <Flex justifyContent="center" w="100%" mb={3}>
-          <KittyAvatar dna={kitty?.dna!} />
+          {!!kitty?.dna && <KittyAvatar dna={kitty?.dna!}/>}
         </Flex>
         <FormControl>
           <FormLabel>Kitty DNA</FormLabel>
@@ -95,7 +95,7 @@ export const Details = () => {
           <div className="prop"><Text>Gender</Text><Tag colorScheme={kitty?.gender === 'male' ? 'blue' : 'red'} borderRadius="full">{kitty?.gender}</Tag></div>
           <div className="prop"><Text>No. of breedings</Text><Tag colorScheme="blackAlpha" borderRadius="full">{kitty?.breedings}</Tag></div>
         </Stack>
-        { kitty?.owner === account?.address ? (<>
+        { kitty?.owner === account?.key ? (<>
           <FormControl>
             <FormLabel>Kitty name</FormLabel>
             <Input onInput={handleNameInput} value={kitty?.name} />

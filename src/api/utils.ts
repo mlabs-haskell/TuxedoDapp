@@ -5,8 +5,8 @@ type Handlers = 'get-all-kitty-list'
   | 'get-tradable-kitty-by-dna'
   | 'get-owned-kitty-list'
   | 'get-owned-coins'
-  | 'mint-coins'
-  | 'create-kitty'
+  | 'post-mint-coin'
+  | 'post-create-kitty'
   | 'get-txn-and-inpututxolist-for-breed-kitty'
   | 'breed-kitty'
   | 'get-block'
@@ -45,11 +45,13 @@ export const apiCall = async (handle: Handlers, method: Methods, headers?: Heade
 export const transformKittyForUi = (data: any): Kitty => {
   return {
     ...data,
-    forSale: !!data.price,
-    gender: data.parent.Mom ? "female" : "male",
-    status: data.parent.Mom || data.parent.Dad,
-    breedings: data.num_breedings,
-    name: String.fromCharCode(...data.name),
+    forSale: !!data.kitty.price,
+    gender: data.kitty.parent.Mom ? "female" : "male",
+    status: data.kitty.parent.Mom || data.kitty.parent.Dad,
+    breedings: data.kitty.num_breedings,
+    name: String.fromCharCode(...data.kitty.name),
+    owner: data.owner_pub_key,
+    dna: data.kitty.dna,
   }
 }
 export const sign = (transaction: unknown): unknown => {
