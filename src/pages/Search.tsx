@@ -22,7 +22,7 @@ import { To, useNavigate } from "react-router-dom";
 import { SearchIcon } from 'chakra-ui-ionicons';
 import Fuse, { FuseResult } from "fuse.js";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { getKitties, selectKitties, selectStatus } from "../features/kittiesList";
+import { getKitties, selectError, selectKitties, selectStatus } from "../features/kittiesList";
 import { Kitty } from "../types";
 import { setKitty } from "../features/kittyDetails";
 
@@ -50,6 +50,7 @@ export const Search = () => {
   const dispatch = useAppDispatch();
   const list = useAppSelector(selectKitties);
   const loading = useAppSelector(selectStatus)
+  const error = useAppSelector(selectError)
   const fuse = new Fuse(list,fuseOptions);
   const handleRowClick = (page: To, kitty: Kitty) => () => {
     dispatch(setKitty(kitty))
@@ -144,7 +145,10 @@ export const Search = () => {
                 </Tbody>
               </Table>
             </TableContainer>
-            <Flex justifyContent="center">{loading === 'idle' && <CircularProgress isIndeterminate color='green.300' /> }</Flex>
+            <Flex justifyContent="center">
+              {loading === 'idle' && <CircularProgress isIndeterminate color='green.300' /> }
+              {!!error && error}
+            </Flex>
           </GridItem>
         </Grid>
       </Container>
