@@ -1,5 +1,5 @@
 import { Kitty } from "../types";
-import { apiCall, cut0x, sign } from "./utils";
+import { apiCall, cut0x, sign, transformKittyForUi } from "./utils";
 
 export const api = {
   'show-all-kitties': async ()=>{
@@ -9,19 +9,20 @@ export const api = {
     return await apiCall('get-owned-kitty-list', 'GET',
       {'owner_public_key': cut0x(user) })
   },
-  'get-kitty': async (dna:Pick<Kitty, 'dna'>)=>{
+  'get-kitty': async (dna: string) =>{
     //its either tradable or non-tradable kitty
     const response = await Promise.allSettled([
-      apiCall('get-kitty-by-dna', 'GET', {'kitty-dna': dna}),
-      apiCall('get-tradable-kitty-by-dna', 'GET', {'td-kitty-dna': dna})
+      apiCall('get-kitty-by-dna', 'GET', {'kitty-dna': cut0x(dna!)}),
+      apiCall('get-tradable-kitty-by-dna', 'GET', {'td-kitty-dna': cut0x(dna!)})
     ])
     //return results of successful API call
-    return response.reduce((res, acc)=> {
+    const kitty = response.reduce((res, acc)=> {
       if (res.status === 'fulfilled') acc = res;
       return acc;
     })
+    return transformKittyForUi(kitty)
   },
-  'breed-kitty': async (mom: Pick<Kitty, 'dna'>, dad: Pick<Kitty, 'dna'>, name: string, user: string)=>{
+  'breed-kitty': async (mom: Kitty['dna'], dad: Kitty['dna'], name: string, user: string)=>{
     //$ curl -X GET -H "Content-Type: application/json" -H "mom-dna: e9243fb13a45a51d221cfca21a1a197aa35a1f0723cae3497fda971c825cb1d6" -H "dad-dna: 9741b6456f4b82bb243adfe5e887de9ce3a70e01d7ab39c0f9f565b24a2b059b" -H "child-kitty-name: jram" -H "owner_public_key: d2bf4b844dfefd6772a8843e669f943408966a977e3ae2af1dd78e0f55f4df67" http://localhost:3000/get-txn-and-inpututxolist-for-breed-kitty
     const transaction = await apiCall('get-txn-and-inpututxolist-for-breed-kitty', 'GET',{
       'mom-dna': mom,

@@ -23,7 +23,6 @@ export const KittyAvatar: FC<Props> =({dna}) => {
   const outerStyle: React.CSSProperties = {height: "150px", position: 'relative', width: "150px"},
     innerStyle: React.CSSProperties = {height: "150px", position: 'absolute', top: '0%'};
   let cat = dnaToAttributes(dna);
-  console.log(cat)
   return <div className="">
     <div style={outerStyle}>
       <img alt='body' src={cat.body} style={innerStyle} />

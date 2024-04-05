@@ -14,7 +14,7 @@ import {
 import { CartIcon } from "chakra-ui-ionicons";
 import { BuyModal } from "../components/BuyModal";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { postKitty, selectKitty, setKitty } from "../features/kittyDetails";
+import { getKitty, postKitty, selectKitty, setKitty } from "../features/kittyDetails";
 import { useNavigate } from "react-router-dom";
 import { selectAccount } from "../features/wallet/walletSlice";
 import { setDad, setMom } from "../features/breeding";
@@ -61,8 +61,12 @@ export const Details = () => {
   };
 
   useEffect(()=>{
-    if(!kitty || !kitty?.name) navigate('/');
-  },[kitty])
+    if(!kitty || !kitty?.dna) {
+      navigate('/');
+      return
+    }
+    dispatch(getKitty(kitty.dna!));
+  },[kitty?.dna])
 
   return (
     <div className="main">
