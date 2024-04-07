@@ -41,7 +41,7 @@ const tradingSlice = createSlice({
     })
   }
 })
-export const {clearCoins,setCoins} = tradingSlice.actions;
+export const {clearCoins, setCoins} = tradingSlice.actions;
 export const selectCoins = (state: RootState) => state.trading.coins;
 export const selectSeller = (state: RootState) => state.trading.seller;
 

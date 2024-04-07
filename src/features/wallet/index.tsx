@@ -53,12 +53,12 @@ export const WalletSelector = () => {
             const key = u8aToHex(decodeAddress(account.address));
             const coins = await dispatch(getKitties(key));
             // @ts-ignore
-            const hasCoins = !coins?.payload?.message?.toLowerCase()?.includes('error');
+            const hasNoCoins = !!coins?.payload?.message?.toLowerCase()?.includes('error') || !!coins.error;
             const kitties = await dispatch(getCoins(key));
             // @ts-ignore
-            const hasKitties = !kitties?.payload?.message?.toLowerCase()?.includes('error');
+            const hasNoKitties = !!kitties?.payload?.message?.toLowerCase()?.includes('error') || !!kitties.error;
             //if it's first connect
-            if(!hasCoins && !hasKitties){
+            if(hasNoCoins && hasNoKitties){
               //TODO: kitty name generator
               await Promise.allSettled([
                 api["mint-kitty"]('gene', key),

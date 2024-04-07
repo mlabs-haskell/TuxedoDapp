@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { Kitty } from "../../types";
-import { MOCK_module } from "../../MOCK/client.mock";
 import { api } from "../../api/client";
 
 export interface DetailsState {
@@ -22,10 +21,10 @@ type Result = {
   error?: boolean,
 };
 
-export const postKitty = createAsyncThunk<Kitty, Partial<Kitty>>(
-  'kitty/post',
-  async (kitty) => {
-    return await MOCK_module['set-kitty-property'](kitty)
+export const updateKittyName = createAsyncThunk<Kitty & {error: boolean, data: string}, { kitty: Kitty, key: string }>(
+  'kitty/update/name',
+  async ({kitty, key}) => {
+    return await api['set-name'](kitty, key)
   }
 );
 
@@ -52,7 +51,11 @@ const kittySlice = createSlice({
   },
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
-    builder.addCase(postKitty.fulfilled, (state, action) => {
+    builder.addCase(updateKittyName.fulfilled, (state, action) => {
+      if (action.payload.error) {
+        state.loading = 'failed';
+        return;
+      }
       state.entity = action.payload;
     })
     builder.addCase(getKitty.fulfilled, (state, action) => {

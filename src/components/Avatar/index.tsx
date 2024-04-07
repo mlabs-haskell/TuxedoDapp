@@ -7,11 +7,11 @@ const dnaToAttributes = (dna: string) =>{
     return Number(dna[index].charCodeAt(0)) % options
   };
   return {
-    body: IMAGES.body[attribute(0, 15)],
-    eyes: IMAGES.eyes[attribute(1, 15)],
-    accessory: IMAGES.accessories[attribute(2, 20)],
-    fur: IMAGES.fur[attribute(3, 10)],
-    mouth: IMAGES.mouth[attribute(4, 10)]
+    body: IMAGES.body[attribute(2, 15)],
+    eyes: IMAGES.eyes[attribute(3, 15)],
+    accessory: IMAGES.accessories[attribute(4, 20)],
+    fur: IMAGES.fur[attribute(5, 10)],
+    mouth: IMAGES.mouth[attribute(6, 10)]
   }
 }
 

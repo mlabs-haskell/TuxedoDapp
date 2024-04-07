@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Button,
   Stack,
@@ -14,11 +14,12 @@ import {
 import { CartIcon } from "chakra-ui-ionicons";
 import { BuyModal } from "../components/BuyModal";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { getKitty, postKitty, selectKitty, setKitty } from "../features/kittyDetails";
+import { getKitty, selectKitty, setKitty, updateKittyName } from "../features/kittyDetails";
 import { useNavigate } from "react-router-dom";
 import { selectAccount } from "../features/wallet/walletSlice";
 import { setDad, setMom } from "../features/breeding";
 import { KittyAvatar } from "../components/Avatar";
+import { Kitty } from "../types";
 
 export const Details = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -27,6 +28,7 @@ export const Details = () => {
   const account = useAppSelector(selectAccount);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const [hasChanged, setChangedFields] = useState<Record<string, boolean>>({});
   const handleClose = useCallback(()=>{
     toast({
       title: "Kitty purchased successfully!",
@@ -53,11 +55,17 @@ export const Details = () => {
     dispatch(setKitty({...kitty, price: +event.currentTarget.value}))
   };
   const handleNameInput = (event: React.FormEvent<HTMLInputElement>) => {
-    dispatch(setKitty({...kitty, name: event.currentTarget.value}))
+    dispatch(setKitty({...kitty, name: event.currentTarget.value}));
+    setChangedFields({
+      ...hasChanged,
+      name: true
+    });
   };
   const handleUpdate = () => {
-    if(!kitty) return;
-    dispatch(postKitty(kitty));
+    if(!kitty || !account?.key) return;
+    if (hasChanged.name) {
+      dispatch(updateKittyName({kitty: kitty as Kitty, key: account?.key!}))
+    }
   };
 
   useEffect(()=>{

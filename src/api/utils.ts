@@ -1,6 +1,6 @@
 import { Kitty } from "../types";
 
-type Handlers = 'get-all-kitty-list'
+export type Handlers = 'get-all-kitty-list'
   | 'get-kitty-by-dna'
   | 'get-tradable-kitty-by-dna'
   | 'get-owned-kitty-list'
@@ -8,10 +8,14 @@ type Handlers = 'get-all-kitty-list'
   | 'post-mint-coin'
   | 'post-create-kitty'
   | 'get-txn-and-inpututxolist-for-breed-kitty'
+  | 'get-txn-and-inpututxolist-for-kitty-name-update'
+  | 'get-txn-and-inpututxolist-for-td-kitty-name-update'
+  | 'patch-update-kitty-name'
+  | 'patch-update-td-kitty-name'
   | 'breed-kitty'
   | 'get-block'
   | 'list-kitty-for-sale';
-type Methods = 'POST' | 'PUT' | 'DELETE' | 'GET';
+type Methods = 'POST' | 'PUT' | 'DELETE' | 'GET' | 'PATCH';
 type Headers = {};
 type Body = {};
 export const apiCall = async (handle: Handlers, method: Methods, headers?: Headers, body?: Body) => {
