@@ -3,6 +3,7 @@ import { RootState } from '../../app/store';
 import { Kitty } from "../../types";
 import { api } from "../../api/client";
 
+
 export interface DetailsState {
   entity?: Partial<Kitty> | Kitty;
   loading: 'idle' | 'pending' | 'succeeded' | 'failed'
@@ -21,10 +22,14 @@ type Result = {
   error?: boolean,
 };
 
+
 export const updateKittyName = createAsyncThunk<Kitty & {error: boolean, data: string}, { kitty: Kitty, key: string }>(
   'kitty/update/name',
-  async ({kitty, key}) => {
-    return await api['set-name'](kitty, key)
+  // @ts-ignore
+  async ({kitty, key}, { getState }) => {
+    const {wallet} = getState() as RootState;
+    if (!wallet.accounts) return { error: true, data: 'Wallet is not connected'};
+    return await api['set-name'](kitty, key, wallet.accounts)
   }
 );
 
@@ -59,15 +64,15 @@ const kittySlice = createSlice({
       state.entity = action.payload;
     })
     builder.addCase(getKitty.fulfilled, (state, action) => {
-      console.log(action.payload)
       if (action.payload.error) {
         state.loading = 'failed';
-        return
+        return;
       }
       if (action.payload.value.message.toLowerCase().includes('error')){
         state.loading = 'failed';
         return;
       }
+      state.loading = 'succeeded';
       state.entity = action.payload.value.kitty;
     })
   }

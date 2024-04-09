@@ -1,3 +1,7 @@
+import {
+  WalletAccount,
+} from '@talismn/connect-wallets';
+
 export type Kitty = {
   owner?: string;
   dna?: string;
@@ -21,3 +25,5 @@ export type Coin = {
   hash: string;
   value: number;
 }
+
+export type wallet = WalletAccount & {key: string};

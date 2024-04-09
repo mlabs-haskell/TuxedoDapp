@@ -2,19 +2,16 @@ import React, { useEffect } from "react";
 import { useToast, CircularProgress } from "@chakra-ui/react";
 import {
   getWallets,
-  Wallet,
 } from '@talismn/connect-wallets';
 import { useAppDispatch } from "../../app/hooks";
 import { connect, login } from "./walletSlice";
 import { api } from "../../api/client";
-import { getCoins, setCoins } from "../trade";
+import { getCoins } from "../trade";
 import { getKitties } from "../kittiesList";
 import { decodeAddress } from "@polkadot/keyring";
 import { u8aToHex } from "@polkadot/util";
 
 const DAPP_NAME = process.env.REACT_APP_DAPP_NAME || "development";
-const SUPPORTED_WALLETS = ["Talisman"];
-const chooseWallets = (wallet: Wallet) => SUPPORTED_WALLETS.includes(wallet.title);
 
 // get an array of wallets which are installed
 const installedWallets = getWallets().filter(wallet => wallet.installed)
@@ -48,24 +45,29 @@ export const WalletSelector = () => {
             })
             return;
           }
-          //check if it's first connect
-          for (const account of accounts) {
-            const key = u8aToHex(decodeAddress(account.address));
-            const coins = await dispatch(getKitties(key));
-            // @ts-ignore
-            const hasNoCoins = !!coins?.payload?.message?.toLowerCase()?.includes('error') || !!coins.error;
-            const kitties = await dispatch(getCoins(key));
-            // @ts-ignore
-            const hasNoKitties = !!kitties?.payload?.message?.toLowerCase()?.includes('error') || !!kitties.error;
-            //if it's first connect
-            if(hasNoCoins && hasNoKitties){
-              //TODO: kitty name generator
-              await Promise.allSettled([
-                api["mint-kitty"]('gene', key),
-                api["mint-coins"](key, 600)
-              ])
+          // @ts-ignore
+          if (!window.accounts){
+            console.log('no connect')
+            //check if it's first connect
+            for (const account of accounts) {
+              const key = u8aToHex(decodeAddress(account.address));
+              const coins = await dispatch(getKitties(key));
+              // @ts-ignore
+              const hasNoCoins = !!coins?.payload?.message?.toLowerCase()?.includes('error') || !!coins.error;
+              const kitties = await dispatch(getCoins(key));
+              // @ts-ignore
+              const hasNoKitties = !!kitties?.payload?.message?.toLowerCase()?.includes('error') || !!kitties.error;
+              //if it's first connect
+              if(hasNoCoins && hasNoKitties){
+                //TODO: kitty name generator
+                await Promise.allSettled([
+                  api["mint-kitty"]('gene', key),
+                  api["mint-coins"](key, 600)
+                ])
+              }
             }
           }
+
 
           //finish connecting
           toast({
@@ -89,7 +91,6 @@ export const WalletSelector = () => {
         })
       }
     }
-
     fetchData()
       .catch(error => {
         toast({

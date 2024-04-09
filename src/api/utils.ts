@@ -1,4 +1,5 @@
-import { Kitty } from "../types";
+import { Kitty, wallet } from "../types";
+import { hexToU8a, u8aToHex } from '@polkadot/util';
 
 export type Handlers = 'get-all-kitty-list'
   | 'get-kitty-by-dna'
@@ -58,9 +59,47 @@ export const transformKittyForUi = (data: any): Kitty => {
     dna: data.kitty.dna,
   }
 }
-export const sign = (transaction: unknown): unknown => {
-  return transaction;
+
+export const sign = async (data: any, accounts: wallet[]) => {
+  const constructRedeemer = async (data: any, key: string) => {
+    const address = getAddressByKey(key, accounts);
+
+    if (!address) return;
+
+    // @ts-ignore
+    const wallet = window.accounts.find(acc => acc.address === address);
+    console.log(address)
+
+    const { signature } = await wallet?.signer.signRaw({
+      data: u8aToHex(new Uint8Array(data)),
+      type: 'bytes',
+      address: address
+    });
+    return Array.from(hexToU8a(signature));
+  };
+
+  return {
+    "signed_transaction": {
+      ...data.transaction,
+      "inputs": await Promise.all(data.transaction.outputs.map(async (output: any, index: number) => ({
+        "output_ref": data.transaction.inputs[index].output_ref,
+        "redeemer": await constructRedeemer(output.payload.data, output.verifier.Sr25519Signature.owner_pubkey)
+      }))),
+      "outputs": [
+        ...data.transaction.outputs
+      ],
+    },
+    "input_utxo_list": [
+      ...data["input_utxo_list"]
+    ]
+  };
 }
+export const getAddressByKey = (key: string, accounts: wallet[]): string | undefined => {
+  const account = accounts.find((acc) => {
+    return cut0x(acc.key) === cut0x(key)
+  });
+  return account?.address;
+};
 export const cut0x = (key: string): string => {
   if (key[0] === '0' && key[1] === 'x') return key.slice(2);
   return key;

@@ -1,10 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import {
-  WalletAccount,
-} from '@talismn/connect-wallets';
+import { wallet } from "../../types";
 
-type wallet = WalletAccount & {key: string};
 export interface WalletState {
   accounts?:wallet[];
   isConnected: boolean;

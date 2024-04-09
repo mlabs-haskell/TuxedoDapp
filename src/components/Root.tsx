@@ -12,19 +12,12 @@ import {getWalletBySource} from "@talisman-connect/wallets";
 
 export const Root = () => {
   const account = useAppSelector(selectAccount);
-  const isConnected = useAppSelector(selectIsConnected);
+  // @ts-ignore
+  const isConnected = !!window.accounts;
   const wallet = getWalletBySource('talisman');
-  // const sign = async  () => {
-  //   wallet?.enable('kitty');
-  //   const signerResult = await wallet?.signer.signRaw({
-  //     type: 'payload',
-  //     data: 'Some data to sign...',
-  //     address: account?.address,
-  //   });
-  // }
+
   useEffect(()=>{
     if (!account || !wallet) return;
-    //sign();
   },[account, wallet])
 
   return (
