@@ -93,21 +93,14 @@ export const sign = async (data: any, accounts: wallet[]) => {
     return Array.from(hexToU8a(signature));
   };
 
+  await constructRedeemer(
+    data.encoded,
+    data.transaction.outputs[0].verifier.Sr25519Signature.owner_pubkey,
+  );
+
   const tx = {
     signed_transaction: {
       ...data.transaction,
-      // inputs: await Promise.all(
-      //   data.transaction.outputs.map(async (output: any, index: number) => {
-      //     const redeemer = await constructRedeemer(
-      //       data.encoded,
-      //       output.verifier.Sr25519Signature.owner_pubkey,
-      //     );
-      //     return {
-      //       output_ref: data.transaction.inputs[index].output_ref,
-      //       redeemer: redeemer,
-      //     };
-      //   }),
-      // ),
       outputs: [...data.transaction.outputs],
     },
     input_utxo_list: [...data["input_utxo_list"]],
