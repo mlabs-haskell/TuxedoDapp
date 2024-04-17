@@ -106,6 +106,27 @@ const kittySlice = createSlice({
       }
       state.entity = action.payload;
     });
+    builder.addCase(updateKittyPrice.fulfilled, (state, action) => {
+      if (action.payload.error) {
+        state.loading = "failed";
+        return;
+      }
+      state.entity = action.payload;
+    });
+    builder.addCase(delistKitty.fulfilled, (state, action) => {
+      if (action.payload.error) {
+        state.loading = "failed";
+        return;
+      }
+      state.entity = action.payload;
+    });
+    builder.addCase(listKitty.fulfilled, (state, action) => {
+      if (action.payload.error) {
+        state.loading = "failed";
+        return;
+      }
+      state.entity = action.payload;
+    });
     builder.addCase(getKitty.fulfilled, (state, action) => {
       if (action.payload.error) {
         state.loading = "failed";
