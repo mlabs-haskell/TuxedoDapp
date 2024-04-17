@@ -110,7 +110,17 @@ export const Details = () => {
     }
 
     if (hasChanged.listKitty) {
-      dispatch(listKitty({ kitty: kitty as Kitty, key: account?.key! }));
+      if (kitty.price) {
+        dispatch(listKitty({ kitty: kitty as Kitty, key: account?.key! }));
+      } else {
+        toast({
+          title: "Enter price to list kitty for sale!",
+          status: "warning",
+          isClosable: true,
+          duration: 10000,
+          position: "top-right",
+        });
+      }
     }
     if (hasChanged.delistKitty) {
       dispatch(delistKitty({ kitty: kitty as Kitty, key: account?.key! }));
@@ -226,13 +236,24 @@ export const Details = () => {
                 <FormLabel>Owner</FormLabel>
                 <Input readOnly value={kitty?.owner} />
               </FormControl>
-              <FormControl>
-                <FormLabel>Price</FormLabel>
-                <Input readOnly value={kitty?.price} />
-              </FormControl>
-              <Button onClick={onOpen} type="submit" mt={8} colorScheme="teal">
-                <CartIcon /> Buy Now
-              </Button>
+
+              {kitty?.forSale && (
+                <>
+                  <FormControl>
+                    <FormLabel>Price</FormLabel>
+                    <Input readOnly value={kitty?.price} />
+                  </FormControl>
+                  <Button
+                    onClick={onOpen}
+                    type="submit"
+                    mt={8}
+                    colorScheme="teal"
+                  >
+                    <CartIcon /> Buy Now
+                  </Button>
+                </>
+              )}
+
               <BuyModal isOpen={isOpen} onOpen={onOpen} onClose={handleClose} />
             </Stack>
           </>

@@ -27,6 +27,7 @@ export const api = {
     return {
       owner_kitty_list: ownedKitties["kitty_list"].map((kittyData: any) => ({
         kitty: kittyData,
+        owner_pub_key: cut0x(user),
       })),
     };
   },
