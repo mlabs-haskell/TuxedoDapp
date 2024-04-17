@@ -3,6 +3,7 @@ import { hexToU8a, u8aToHex } from "@polkadot/util";
 
 export type Handlers =
   | "get-all-kitty-list"
+  | "get-all-tradable-kitty-list"
   | "get-kitty-by-dna"
   | "get-tradable-kitty-by-dna"
   | "get-owned-kitty-list"
@@ -16,7 +17,13 @@ export type Handlers =
   | "patch-update-td-kitty-name"
   | "breed-kitty"
   | "get-block"
-  | "list-kitty-for-sale";
+  | "list-kitty-for-sale"
+  | "get-txn-and-inpututxolist-for-delist-kitty-from-sale"
+  | "put-delist-kitty-from-sale"
+  | "get-txn-and-inpututxolist-for-td-kitty-price-update"
+  | "get-txn-and-inpututxolist-for-listkitty-forsale"
+  | "put-listkitty-for-sale"
+  | "patch-update-td-kitty-price";
 type Methods = "POST" | "PUT" | "DELETE" | "GET" | "PATCH";
 type Headers = {};
 type Body = {};
@@ -63,6 +70,7 @@ export const transformKittyForUi = (data: any): Kitty => {
     name: String.fromCharCode(...data.kitty.name),
     owner: data.owner_pub_key,
     dna: data.kitty.dna,
+    price: data.kitty.price,
   };
 };
 
