@@ -21,9 +21,14 @@ export const api = {
     };
   },
   "show-owned-kitties": async (user: string) => {
-    return await apiCall("get-owned-kitty-list", "GET", {
+    const ownedKitties = await apiCall("get-owned-kitty-list", "GET", {
       owner_public_key: cut0x(user),
     });
+    return {
+      owner_kitty_list: ownedKitties["kitty_list"].map((kittyData: any) => ({
+        kitty: kittyData,
+      })),
+    };
   },
   "get-kitty": async (dna: string) => {
     //its either tradable or non-tradable kitty
@@ -135,12 +140,30 @@ export const api = {
       "kitty-dna": cut0x(kitty.dna!),
       owner_public_key: cut0x(key),
     });
-    console.log("tx", transaction);
     const signedTransaction = await sign(transaction, accounts);
     return await apiCall(updateHandle, "PUT", {}, signedTransaction);
   },
-  "buy-kitty": async () => {
-    //$ curl -X GET -H "Content-Type: application/json" -H "kitty-dna: bc147303f7d0a361ac22a50bf2ca2ec513d926a327ed678827c90d6512feadd6" -H "input-coins: 4d732d8b0d0995151617c5c3beb600dc07a9e1be9fc8e95d9c792be42d65911000000000" -H "output_amount: 200" -H "buyer_public_key: d2bf4b844dfefd6772a8843e669f943408966a977e3ae2af1dd78e0f55f4df67" -H "seller_public_key: fab33c8c12f8df78fa515faa2fcc4bbf7829804a4d187984e13253660a9c1223"http://localhost:3000/get-txn-and-inpututxolist-for-buy-kitty
+  "buy-kitty": async (
+    kitty: Kitty,
+    key: string,
+    accounts: wallet[],
+    outputAmount: number,
+    coin: string,
+  ) => {
+    const buyTxBody = {
+      "kitty-dna": cut0x(kitty.dna!),
+      "input-coins": coin,
+      output_amount: outputAmount,
+      buyer_public_key: cut0x(key),
+      seller_public_key: cut0x(kitty.owner!),
+    };
+    if (!kitty) return;
+    let txHandle: Handlers = "get-txn-and-inpututxolist-for-buy-kitty";
+    let updateHandle: Handlers = "patch-buy-kitty";
+
+    const transaction = await apiCall(txHandle, "GET", buyTxBody);
+    const signedTransaction = await sign(transaction, accounts);
+    return await apiCall(updateHandle, "PATCH", {}, signedTransaction);
   },
   "mint-kitty": async (name: string, user: string) => {
     // should be called on first entry

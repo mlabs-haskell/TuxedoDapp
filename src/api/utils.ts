@@ -9,6 +9,8 @@ export type Handlers =
   | "get-owned-kitty-list"
   | "get-owned-coins"
   | "post-mint-coin"
+  | "get-txn-and-inpututxolist-for-buy-kitty"
+  | "patch-buy-kitty"
   | "post-create-kitty"
   | "get-txn-and-inpututxolist-for-breed-kitty"
   | "get-txn-and-inpututxolist-for-kitty-name-update"

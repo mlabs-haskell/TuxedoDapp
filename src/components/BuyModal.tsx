@@ -31,6 +31,7 @@ export const BuyModal: FC<Props> = ({ isOpen, onClose }) => {
   const coins = useAppSelector(selectCoins);
   const dispatch = useAppDispatch();
   const account = useAppSelector(selectAccount);
+  const [selectedCoins, setSelectedCoins] = useState<any>([]);
 
   useEffect(() => {
     if (!account) return;
@@ -45,6 +46,15 @@ export const BuyModal: FC<Props> = ({ isOpen, onClose }) => {
     setTotal(
       selected?.reduce((acc, option) => acc + Number(option.value), 0) || 0,
     );
+    setSelectedCoins(selected || []);
+  };
+
+  const handleProceed = () => {
+    if (selectedCoins.length > 0) {
+      const kittyPrice = kitty?.price || 0;
+      const outputAmount = total - kittyPrice;
+      onClose(selectedCoins[0].hash, outputAmount);
+    }
   };
 
   return (
@@ -63,19 +73,15 @@ export const BuyModal: FC<Props> = ({ isOpen, onClose }) => {
                 options={coins.map((coin) => ({
                   label: `${coin.hash} (${coin.value})`,
                   value: `${coin.value}`,
+                  hash: coin.hash,
                 }))}
               />
               <FormHelperText>Total value: {total}</FormHelperText>
             </FormControl>
-            <FormControl>
-              <FormLabel>Send to address</FormLabel>
-              <Input value={kitty?.owner} readOnly />
-              <FormHelperText>sr25519 pubkey</FormHelperText>
-            </FormControl>
           </Stack>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="teal" width="100%" onClick={onClose}>
+          <Button colorScheme="teal" width="100%" onClick={handleProceed}>
             <ArrowForwardIcon mr={2} /> Proceed
           </Button>
         </ModalFooter>

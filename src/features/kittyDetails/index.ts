@@ -77,6 +77,26 @@ export const delistKitty = createAsyncThunk<
   },
 );
 
+export const purchaseKitty = createAsyncThunk<
+  Kitty & { error: boolean; data: string },
+  { kitty: Kitty; key: string; outputAmount: number; coin: string }
+>(
+  "kitty/purchase",
+  // @ts-ignore
+  async ({ kitty, key, outputAmount, coin }, { getState }) => {
+    const { wallet } = getState() as RootState;
+    if (!wallet.accounts)
+      return { error: true, data: "Wallet is not connected" };
+    return await api["buy-kitty"](
+      kitty,
+      key,
+      wallet.accounts,
+      outputAmount,
+      coin,
+    );
+  },
+);
+
 export const getKitty = createAsyncThunk<Result, NonNullable<Kitty["dna"]>>(
   "kitty/get",
   // @ts-ignore
@@ -121,6 +141,13 @@ const kittySlice = createSlice({
       state.entity = action.payload;
     });
     builder.addCase(listKitty.fulfilled, (state, action) => {
+      if (action.payload.error) {
+        state.loading = "failed";
+        return;
+      }
+      state.entity = action.payload;
+    });
+    builder.addCase(purchaseKitty.fulfilled, (state, action) => {
       if (action.payload.error) {
         state.loading = "failed";
         return;

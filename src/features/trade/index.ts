@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import { Coin } from "../../types";
-import { MOCK_module } from "../../MOCK/client.mock";
 import { api } from "../../api/client";
 
 export interface DetailsState {

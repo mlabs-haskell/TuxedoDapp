@@ -27,6 +27,7 @@ import {
   updateKittyPrice,
   listKitty,
   delistKitty,
+  purchaseKitty,
 } from "../features/kittyDetails";
 import { useNavigate } from "react-router-dom";
 import { selectAccount } from "../features/wallet/walletSlice";
@@ -42,7 +43,16 @@ export const Details = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [hasChanged, setChangedFields] = useState<Record<string, boolean>>({});
-  const handleClose = useCallback(() => {
+  const handleClose = useCallback((coin: string, outputAmount: number) => {
+    dispatch(
+      purchaseKitty({
+        kitty: kitty as Kitty,
+        key: account?.key!,
+        outputAmount,
+        coin,
+      }),
+    );
+
     toast({
       title: "Kitty purchased successfully!",
       status: "success",
