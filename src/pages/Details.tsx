@@ -204,14 +204,14 @@ export const Details = () => {
               >
                 Update
               </Button>
-              <Button onClick={handleBreed} type="submit" colorScheme="teal">
+              {/* <Button onClick={handleBreed} type="submit" colorScheme="teal">
                 Breed
-              </Button>
+              </Button> */}
             </Stack>
           </>
         ) : (
           <>
-            <Stack gap={4}>
+            <Stack gap={4} my="6">
               <FormControl>
                 <FormLabel>Owner</FormLabel>
                 <Input readOnly value={kitty?.owner} />
