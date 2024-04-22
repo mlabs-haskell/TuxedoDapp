@@ -76,7 +76,9 @@ export const MyKitties = () => {
             </Heading>
             <Spacer />
             <Stack spacing="1em" direction="row">
-              {/* <Button as={Link} to="/breed" colorScheme="pink"><EggIcon mr={1.5}/> Breed</Button> */}
+              <Button as={Link} to="/breed" colorScheme="pink">
+                <EggIcon mr={1.5} /> Breed
+              </Button>
               <InputGroup>
                 <InputLeftElement pointerEvents="none">
                   <SearchIcon />

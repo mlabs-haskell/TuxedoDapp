@@ -51,25 +51,23 @@ export const api = {
     dad: Kitty["dna"],
     name: string,
     user: string,
+    accounts: wallet[],
   ) => {
-    //$ curl -X GET -H "Content-Type: application/json" -H "mom-dna: e9243fb13a45a51d221cfca21a1a197aa35a1f0723cae3497fda971c825cb1d6" -H "dad-dna: 9741b6456f4b82bb243adfe5e887de9ce3a70e01d7ab39c0f9f565b24a2b059b" -H "child-kitty-name: jram" -H "owner_public_key: d2bf4b844dfefd6772a8843e669f943408966a977e3ae2af1dd78e0f55f4df67" http://localhost:3000/get-txn-and-inpututxolist-for-breed-kitty
+    let updateHandle: Handlers = "post-breed-kitty";
+    const txBody = {
+      "mom-dna": cut0x(mom!),
+      "dad-dna": cut0x(dad!),
+      "child-kitty-name": name,
+      owner_public_key: cut0x(user),
+    };
     const transaction = await apiCall(
       "get-txn-and-inpututxolist-for-breed-kitty",
       "GET",
-      {
-        "mom-dna": mom,
-        "dad-dna": dad,
-        "child-kitty-name": name,
-        owner_public_key: user,
-      },
+      txBody,
     );
-    // sign
-    // TODO
-    //const signedTransaction = await sign(transaction);
 
-    // return await apiCall('breed-kitty', 'POST',{},{
-    //   'signed_transaction': signedTransaction
-    // });
+    const signedTransaction = await sign(transaction, accounts);
+    return await apiCall(updateHandle, "POST", {}, signedTransaction);
   },
   "set-kitty-property": async (kitty: Partial<Kitty>) => {
     //price
@@ -131,7 +129,6 @@ export const api = {
     return await apiCall(updateHandle, "PUT", {}, signedTransaction);
   },
   delist: async (kitty: Kitty, key: string, accounts: wallet[]) => {
-    console.log("kitty", kitty);
     if (!kitty) return;
     let txHandle: Handlers =
       "get-txn-and-inpututxolist-for-delist-kitty-from-sale";

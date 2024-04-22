@@ -224,9 +224,9 @@ export const Details = () => {
               >
                 Update
               </Button>
-              {/* <Button onClick={handleBreed} type="submit" colorScheme="teal">
+              <Button onClick={handleBreed} type="submit" colorScheme="teal">
                 Breed
-              </Button> */}
+              </Button>
             </Stack>
           </>
         ) : (
