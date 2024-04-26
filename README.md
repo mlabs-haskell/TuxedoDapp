@@ -7,24 +7,18 @@ The Tuxedo project endeavours to demonstrate the flexibility and interoperabilit
 
 Our goal is to showcase the potential of Polkadot using the UTXO paradigm for the end user, leveraging Tuxedo. The project will consist of two key stages:
 
-- Stage 1: Developing a simple Web Wallet
+- Stage 1: Integration of Talisman Wallet
 - Stage 2: Developing a basic DApp
 
 ### Project Details
 
-- Stage 1: Developing a simple Web Wallet
+- Stage 1: Integration of Talisman Wallet
 
-Develop a user-friendly web wallet that allows users to manage their UTXOs on the Tuxedo-based Polkadot network which is similar to polkadot.js which will get the chain info(genesisHash, runtime metadata, chain runtime version, API version), block info
-Focus on simplicity, security, and ease of use to provide a seamless experience for users interacting with UTXOs.
-
-**Technical Requirements**
- 
-**Security:** : Private key storage:
-The web-based wallet will provide a secure method for private key storage on the client side, such as a browser's secure storage or hardware wallets.
+Integrate a user-friendly web wallet that allows users to manage their UTXOs on the Tuxedo-based Polkadot network
 
 **Functionality**: 
 1. Feature Parity Between Web-Based and CLI Wallets
-The web-based wallet will be designed to mirror the core functionality of the CLI wallet, offering seamless UTXO synchronization and token handling, ensuring that users have an equivalent experience across both interfaces
+The web-based wallet will allow to mirror the core functionality of the CLI wallet, offering seamless UTXO synchronization and token handling, ensuring that users have an equivalent experience across both interfaces
 Note: _Feature Parity_ means web-based and command-line interface (CLI) wallets, have the same set of features and functionalities, both versions provide an equivalent or identical user experience by offering the same core capabilities and options.
 
 2. Issues Fix in web-based wallet (https://github.com/Off-Narrative-Labs/Tuxedo/issues/62)
@@ -34,27 +28,24 @@ The current implementation of a CLI-based wallet allows sending inputs from mult
 Web-based wallet will ensure compatibility with Chrome, Firefox and Edge.
 
 **Blockchain Integration**:
-Web-based wallet will connect to the blockchain node to fetch relevant data.
-We will check if there is any lib such as the one used by "https://polkadot.js.org/" to interact with the Tuxedo-based blockchain for easy integration.
+Web-based wallet to connect with the blockchain node and fetch data.
 
 **Transactions**:
 web-based wallet will implement transaction creation and signing on the client side.
-We will consider using libraries that support the specific blockchain's transaction format for Tuxedo with UTXO instead of accounts.
 
 **Local Database**:
 web-based wallet will consider using databases for storing non-sensitive user data.
 Local database (e.g., IndexedDB, WebSQL, or a lightweight client-side database) to store relevant wallet data locally on the user's device.
 
 **Tech Stack**:
-- polkadot{.js} trying to re-use it if possible
-- React Framework(React + Redux + React Router) OR Vue Framework (Vue.js with Vuex and the Vue Router)
 - TypeScript
-- webpack
-- Babel for backward compatibility in older Browsers
-- IndexedDB for Local database
-- Jest as JavaScript testing framework
 
-Wallet Wireframes: [![Wallet wireframes](https://lh3.googleusercontent.com/d/1nzE2_uqK5V4IwUJJPb92Q_WJk3RDR9UL=-h1932-iv2)](https://drive.google.com/file/d/1nzE2_uqK5V4IwUJJPb92Q_WJk3RDR9UL/view?usp=sharing)
+**Demo web wallet integration**:
+The video shows how the Talisman integration works for all the features of the DApp
+[![Talisman integration](https://cdn.loom.com/sessions/thumbnails/e1270ecea79a4689aff5732e8acfae14-00001.jpg)](https://cdn.loom.com/sessions/thumbnails/e1270ecea79a4689aff5732e8acfae14-00001.mp4) 
+
+
+
 
 - Stage 2: DApp Development
 
