@@ -1,4 +1,4 @@
-# Tuxedo DApp and Talisman integration
+# Tuxedo DApp, Extended CLI-wallet and Talisman integration
 
 ### Overview
 
