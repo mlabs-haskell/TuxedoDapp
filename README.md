@@ -36,6 +36,10 @@ Web-based and CLI wallet to connect with the blockchain node and fetch data.
 The video shows how the Talisman integration works for all the features of the DApp
 [![Talisman integration](https://lh3.googleusercontent.com/fife/ALs6j_H0alrnYohHiTA8-ba66gKTIanTJEIpqpG3a_BypxrYF4x9RqyuEOPPNMFG2klmzx_XO41vzLjZozlEl-c6JSINV3tselBbCUq80lasnGIvlRQoHvv1btt7w2VJ5X3MpjKZvbTooqm-AjNfBnAOy8iNXOOKsfRVjoRAoTHrDQ1P6d7gHvo9lQk8Yxui-8LYIt4qr-IEgzD4GPxMkP--8AAuLqgn3I0uQxRxcYq5VaO1wmW9_6wU8E2Vw2xv95uipUoG4Jiw1UPosWKFExrBCdO1D_pAwknRpS5KXAuJl3zbmgbkiEZ4Z77eO-fwSqjC-YA_MWWYWj4ubG6avZQG3Jt4d-TNIrLKRXjj-o-eOR3D0HDuMgHSofDnLCs6PnvQ0MyGuYjW4aw96TD7GVrLclseyzgvR5NbFSdF8Vp9woxc2Ve8Tyx-cZJgEy6AhIW2Zn-588nFm3PXus4zgI-D41SbFgH8-iRiGsYUlUS1tlxbIELvMBznqVSQSpOJIeFidhwnnP12EC5qkK9RjTmhEbTlmEI6AhpiXwkX6zUv_awLSN58lKJmFDhozhx1HEvtKhdg_B9t6exLhGeB7LbU9KvueWIgxXC5Ey7Ijn-DvjyRf78Rp35pAb_n9Ucelz4cgXffawjo4D4B76wAT6fV-ILjfvsPN1JTAf_vJu9-LjLf-OqjUpuYbYBK1Ve7Yo1c1jfNimGTZFhYihLx62LK6dnf_PT-Nn_pucGCUgjbMDuZkEccjhDhjxwM6wz0Uj8mVQ_OE4UNv-vm1QqkNSSDw5tgRxI7v-_XSSPLGc1LoC0WanUI9LswnW2SovLw0nmJqMngCYUdOjSFLrTunEP80mZVpVhjjJeBsE-nIEUwCDMgs49YwSgwRn3RZoF10_lnpNwj3dP0uA7OCi8SdAeNzbk1btpZoI7hWwQ09ugejTJ46HMDd91FFxHWguxWY7YPTQmbcNk1ZOG0I5bB0A9pzGrJXnDj4OgonDxnsvtvsar8FhkE8YZkVUF5eWHw-llYnJFF9EE_D9OdtzZtQYd3QOLfksEwdCW4p_PBAltns3GPrL7Uuhqe-JsImwSS_vv2xssdL4TjosEQgHRSlw2c6bpeUJ9fU0xewnqaZJxy0m6J22AkQfBaanld9dZjtMVnV7XR4kmEzqqxxfVeqhWdrnY9azZKl46TP8DQRb_iCa0qVVY9GlUTC7slbAc0yCbcqzbwtk-jbLOfvy1FElL0htffkxOia5V8iJ5xY6U50ILipEHWqk3arZkwIhiY89xa1Q2zZvgMEW1MyGl25BByo1wUMRwMXJc6Q0OjRcOFWOC-png_Moa8W2joTxAfOLxiX6uqo21SNaZVO5TuRcK_LeyXW1H1QB2lJ3mzQU_NEA_6MVoWKsrmV7sfYu8pyGdH77FPge7w5Bk7W11wihECRVX-BMeCXor-inldO5UaaIlDglzsDyPhcLH0AohVxNJ1PPFUXverO70p5mm8U3m-u1qK4E63_Wjt3uejOr2XP5zh_IZzYCiH6vkGyRFdu2AN06rXBBMqbU-Dd_648D1VN-eU_0zhdv7rZ6yIYucguK8nkyzk-syV6b4xsWFJrNCT0YyFkDGvuTc)](https://www.loom.com/share/e1270ecea79a4689aff5732e8acfae14)
 
+**Extended CLI-wallet for tradable kitties**
+
+<https://github.com/mlabs-haskell/Tuxedo/blob/main/wallet/src/kitty.rs>
+
 **Demo CLI-wallet**:
 
 The videos demonstrate the CLI-wallet functionalities: mint coins, create kitty, update kitty name, list kitty for sale, update tradable kitty price, breed kitty and buy kitty
@@ -127,10 +131,6 @@ Manage NFT means, it includes below :
 - Axum (Rust Web Application Framework)
 - Sled (embedded database)
 
-**Further documentation**
-
-[APIs spreadsheet](https://github.com/mlabs-haskell/TuxedoDapp/wiki/APIs-spreadsheet), [Build and run the project](https://github.com/mlabs-haskell/TuxedoDapp/wiki/Build-and-run-the-project), [DApp specification](https://github.com/mlabs-haskell/TuxedoDapp/wiki/DApp-specification), [Frontend development libs](https://github.com/mlabs-haskell/TuxedoDapp/wiki/Frontend-development-libs), [Game design](https://github.com/mlabs-haskell/TuxedoDapp/wiki/Game-design), [Talisman wallet](https://github.com/mlabs-haskell/TuxedoDapp/wiki/Talisman-wallet), [Wireframes](https://github.com/mlabs-haskell/TuxedoDapp/wiki/Wireframes) 
-
 **Demo DApp**
 
 The video shows how to breed and trade kitties, together with all the functionalities of the DApp
@@ -141,3 +141,19 @@ The video shows how to breed and trade kitties, together with all the functional
 **DApp Wireframes**
 
 [![Wallet wireframes](https://lh3.googleusercontent.com/d/1dCr5Wwi0L-fGPdwAQGFPDhmTeBQYPDy1=w3692-h1932-iv1)](https://drive.google.com/file/d/1dCr5Wwi0L-fGPdwAQGFPDhmTeBQYPDy1/view?usp=sharing)
+
+
+**Further documentation**
+
+[APIs spreadsheet](https://github.com/mlabs-haskell/TuxedoDapp/wiki/APIs-spreadsheet), [Build and run the project](https://github.com/mlabs-haskell/TuxedoDapp/wiki/Build-and-run-the-project), [DApp specification](https://github.com/mlabs-haskell/TuxedoDapp/wiki/DApp-specification), [Frontend development libs](https://github.com/mlabs-haskell/TuxedoDapp/wiki/Frontend-development-libs), [Game design](https://github.com/mlabs-haskell/TuxedoDapp/wiki/Game-design), [Talisman wallet](https://github.com/mlabs-haskell/TuxedoDapp/wiki/Talisman-wallet), [Wireframes](https://github.com/mlabs-haskell/TuxedoDapp/wiki/Wireframes) 
+
+
+**Comparative analysis**
+
+[CryptoKitties Development: A comparative analysis between EVM - Cardano - Tuxedo/Polkadot](https://docs.google.com/document/d/1kdYA9Jd100p91t9okjYncLZw_Qn6guo2Bm032mko3DU)
+
+
+**Additional extra work and experiments**
+
+- Mint_coin: <https://github.com/Off-Narrative-Labs/Tuxedo/commit/80e7b5720a384907cef89e091034fff3fe0f2b7f>
+- Metadata analysis and design/experiments: <https://github.com/Off-Narrative-Labs/Tuxedo/issues/30#issuecomment-1920539885>
