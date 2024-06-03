@@ -145,7 +145,7 @@ The video shows how to breed and trade kitties, together with all the functional
 
 **Further documentation**
 
-[APIs spreadsheet](https://github.com/mlabs-haskell/TuxedoDapp/wiki/APIs-spreadsheet), [Build and run the project](https://github.com/mlabs-haskell/TuxedoDapp/wiki/Build-and-run-the-project), [DApp specification](https://github.com/mlabs-haskell/TuxedoDapp/wiki/DApp-specification), [Frontend development libs](https://github.com/mlabs-haskell/TuxedoDapp/wiki/Frontend-development-libs), [Game design](https://github.com/mlabs-haskell/TuxedoDapp/wiki/Game-design), [Talisman wallet](https://github.com/mlabs-haskell/TuxedoDapp/wiki/Talisman-wallet), [Wireframes](https://github.com/mlabs-haskell/TuxedoDapp/wiki/Wireframes) 
+[Testing guide](https://github.com/mlabs-haskell/TuxedoDapp/blob/master/Testing_Guide.md), [Build and run the DApp](https://github.com/mlabs-haskell/TuxedoDapp/wiki/Build-and-run-the-project), [DApp specification](https://github.com/mlabs-haskell/TuxedoDapp/wiki/DApp-specification), [APIs spreadsheet](https://github.com/mlabs-haskell/TuxedoDapp/wiki/APIs-spreadsheet), [Swagger APIs documentation](https://github.com/mlabs-haskell/TuxedoDapp/blob/master/openapi.yaml), [Frontend development libs](https://github.com/mlabs-haskell/TuxedoDapp/wiki/Frontend-development-libs), [Game design](https://github.com/mlabs-haskell/TuxedoDapp/wiki/Game-design), [Talisman wallet](https://github.com/mlabs-haskell/TuxedoDapp/wiki/Talisman-wallet), [Wireframes](https://github.com/mlabs-haskell/TuxedoDapp/wiki/Wireframes) 
 
 
 **Comparative analysis**
