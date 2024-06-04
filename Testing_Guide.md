@@ -62,7 +62,12 @@ yarn start
 
 You should now have the Tuxedo node running in dev mode, the webservice running, and the dApp running locally. You can test out the functionality of the dApp and interact with the Tuxedo blockchain.
 
-**Note**: Make sure you have Rust, Cargo, Node.js, and Yarn installed on your system before proceeding with the setup.
+**Note**: Make sure you have Rust, Node.js, and Yarn installed on your system before proceeding with the setup.
+
+Build environment used to run the tests:
+- Rust: 1.77.2
+- Node.js: 21.7.2
+- yarn: 1.22.22
 
 #### Testing the dApp functionality
 1. Make a `POST` request to `http://localhost:3000/debug-generate-key` to generate a key in the local keystore in the wallet-cli
