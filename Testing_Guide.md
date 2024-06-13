@@ -66,7 +66,7 @@ You should now have the Tuxedo node running in dev mode, the webservice running,
 
 Build environment used to run the tests:
 - Rust: 1.77.2
-- Node.js: 21.7.2
+- Node.js: 22.3.0
 - yarn: 1.22.22
 
 #### Testing the dApp functionality
