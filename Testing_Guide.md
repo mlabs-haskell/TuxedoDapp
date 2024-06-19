@@ -71,8 +71,19 @@ Build environment used to run the tests:
 
 #### Testing the dApp functionality
 1. Make a `POST` request to `http://localhost:3000/debug-generate-key` to generate a key in the local keystore in the wallet-cli
-2. Add the mnemonic seed to talisman to be able to sign with this key
-3. Test out the dapp features that are available:
+```sh
+curl --location 'http://localhost:3000/debug-generate-key' \
+--header 'Content-Type: application/json' \
+--data '{
+    "password": ""
+}'
+```
+Sample output:
+```json
+{"message":"Keys generated successfully","public_key":"4875f18ce60479b935b257b2cfe17a03432f80af93b368f4653f2381fded9674","phrase":"convince defy athlete buyer truly inside inmate pool foil noodle barely supreme"}
+```
+2. Copy the `phrase` from the output of the command above and import it to Talisman (Settings -> Account -> Add New Account -> Import -> Import via Recovery Phrase -> Polkadot)
+3. Access the DApp on `http://localhost:3006/` to test out the dapp features that are available:
   - Search for kitties
   - Breed a new kitty by specifying male and female parent kitties
   - Update the name for an existing kitty owned by the wallet
