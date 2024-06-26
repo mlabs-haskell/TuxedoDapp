@@ -1,4 +1,14 @@
 # Testing Guide for Tuxedo dApp
+
+## Prerequisites
+
+Make sure you have Rust, Node.js and Yarn installed on your system.
+
+Build environment used
+- Rust: 1.77.2
+- Node.js: 22.3.0
+- yarn: 1.22.22
+
 ## Clone and run the Tuxedo Node
 
 #### Open your terminal.
@@ -62,13 +72,6 @@ yarn start
 
 You should now have the Tuxedo node running in dev mode, the webservice running, and the dApp running locally. You can test out the functionality of the dApp and interact with the Tuxedo blockchain.
 
-**Note**: Make sure you have Rust, Node.js, and Yarn installed on your system before proceeding with the setup.
-
-Build environment used to run the tests:
-- Rust: 1.77.2
-- Node.js: 22.3.0
-- yarn: 1.22.22
-
 #### Testing the dApp functionality
 1. Fetch the local keys by running:
     ```sh
@@ -93,7 +96,7 @@ Build environment used to run the tests:
     Copy over the newly added public key, which will be used for creating the initial kitties.
 
 4. Copy the `phrase` from the output of the command above and import it to Talisman (Settings -> Account -> Add New Account -> Import -> Import via Recovery Phrase -> Polkadot)
-5. Access the DApp on `http://localhost:3006/` on Windows to test out the dapp features that are available. The port can also be customized by modifying the `package.json` file. Make sure that it's running on a different port than `3000`, because the webservice is running on `3000`:
+5. Access the DApp on `http://localhost:3006/` on Windows to test out the available dapp features. The port can also be customized by modifying the `package.json` file. Make sure that it's running on a different port than `3000`, because the webservice is running on `3000`:
   - Search for kitties
   - Breed a new kitty by specifying male and female parent kitties
 
@@ -126,10 +129,10 @@ Build environment used to run the tests:
   - Delist a listed kitty
   - Buy a listed kitty from another wallet by specifying the UXTO input tokens
     In order to test out this functionality, you'll need two keys, one for the seller and one for the buyer. For the seller, you can follow these steps:
-      1. Create an initial kitty by calling the API by specifying yourself as the owner. See the command on breeding section
-      2. Go to kitty details, mark a kitty for sale using the radio button and entering the price and click on Update
+      1. Create an initial kitty by calling the API by specifying yourself as the owner. See the command on the breeding section
+      2. Go to kitty details, mark a kitty for sale using the radio button entering the price and click on Update
     For the buyer, we'll need to mint some tokens, the process can be as follows:
-      1. Generate a new key from the previous steps, add it to Talisman as the "Buyer"
+      1. Generate a new key from the previous steps and add it to Talisman as the "Buyer"
       2. Mint enough coins for the buyer. The `amount` parameter should be more than the kitty price and the `owner_public_key` will need to be fetched by calling `debug-get-key` as done with the seller public key from the previous steps.
           ```sh
           curl --location 'http://localhost:3000/post-mint-coin' \
@@ -139,11 +142,11 @@ Build environment used to run the tests:
                 "amount": 200
             }'
           ```
-      3. Connect to the site as the buyer wallet through Talisman.
+      3. Connect to the site as the buyer's wallet through Talisman.
       4. Go to the details page for the kitten that was listed and you should see the option to "Buy"
-      5. Once you click on "Buy", you'll be able to select the coin that was minted at step 2.
-      6. Select it and and click on "Proceed"
-      7. Go to kitty details and you will see that you the owner of the kitty as you have the option to Update and Breed
+      5. Once you click on "Buy", you'll be able to select the coin that was minted in step 2.
+      6. Select it and click on "Proceed"
+      7. Go to kitty details and you will see that you are the owner of the kitty as you have the option to Update and Breed
 
 
 #### Running wallet cli tests
@@ -186,3 +189,17 @@ test service_handlers::kitty_handler::kitty_service_handler::tests::test_td_pric
 
 test result: ok. 30 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 16.85s
 ```
+
+## Further wallet interactions via CLI (without web interface)
+
+https://github.com/mlabs-haskell/Tuxedo/tree/main/webservice-wallet#readme
+
+## Troubleshooting 
+
+In case of this error 
+> Failed to init db: Node reports a different genesis block than wallet.
+
+The issue arises because the web service saves all blocks, including the initial genesis block, in its local storage. Restarting the web service from scratch creates a new genesis block, which then causes a discrepancy. Clearing the local DB solves the issue.
+
+    cd /tmp/tuxedo-wallet/
+    rm -rf wallet_database
