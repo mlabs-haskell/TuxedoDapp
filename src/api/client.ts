@@ -60,13 +60,17 @@ export const api = {
       "child-kitty-name": name,
       owner_public_key: cut0x(user),
     };
-    const transaction = await apiCall(
+    const response = await apiCall(
       "get-txn-and-inpututxolist-for-breed-kitty",
       "GET",
       txBody,
     );
 
-    const signedTransaction = await sign(transaction, accounts);
+    if (!response.transaction) {
+      throw new Error(response.message || "Getting transaction for breeding kitty failed");
+    }
+
+    const signedTransaction = await sign(response, accounts);
     return await apiCall(updateHandle, "POST", {}, signedTransaction);
   },
   "set-kitty-property": async (kitty: Partial<Kitty>) => {

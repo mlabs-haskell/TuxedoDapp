@@ -61,9 +61,16 @@ export const Breed = () => {
     dispatch(setDad({ dna: event.currentTarget.value }));
   };
   const startBreeding = () => {
-    if (!selectedDad || !selectedMom || kittyName === "") {
+    const warnings = [];
+    if (!selectedDad || !selectedMom) {
+      warnings.push("Please select both parents.");
+    }
+    if (kittyName.length !== 4) {
+      warnings.push("Kitty name must be 4 characters long.");
+    }
+    if (warnings.length > 0) {
       toast({
-        title: "Be sure to enter kitty breeding details!",
+        title: warnings.join(", "),
         status: "warning",
         isClosable: true,
         duration: 10000,
@@ -71,33 +78,66 @@ export const Breed = () => {
       });
       return;
     }
+    
+    if (!selectedDad?.dna || !selectedMom?.dna) {
+      toast({
+        title: "At least one parent is missing DNA, this shouldn't happen!",
+        status: "error",
+        isClosable: true,
+        duration: 10000,
+        position: "top-right",
+      });
+      return;
+    }
+
+    // Dispatch the breeding action and show the result as a toast message.
+    // The results could be handled in the reducer but there is little benefit
+    // in this case since we only need to display a one-time message.
     dispatch(
       postBreed({
-        mom: selectedMom?.dna!,
-        dad: selectedDad?.dna!,
+        mom: selectedMom.dna,
+        dad: selectedDad.dna,
         name: kittyName,
         key: account?.key!,
       }),
-    );
+    )
+      .unwrap()
+      .then((() => {
+        toast({
+          title: "Kitty bred successfully",
+          status: "success",
+          isClosable: true,
+          duration: 10000,
+          position: "top-right",
+        });
+      }))
+      .catch((error) => {
+        const title = "Error breeding kitty";
+        toast({
+          title,
+          description: error.message,
+          status: "error",
+          isClosable: true,
+          duration: 10000,
+          position: "top-right",
+        });
+        console.error(title, error);
+      });
   };
   useEffect(() => {
     if (!account) return;
     // we don't want to update if the kitties are already in store
     if (moms.length > 0 || dads.length > 0) return;
     dispatch(getKitties(account.address));
-  }, [account, moms, dads]);
+  }, [account, moms, dads, dispatch]);
 
   useEffect(() => {
-    if (selectedDad && !selectedMom && moms.length > 0) {
+    // set default selection after loading list of parents
+    if (!selectedDad && !selectedMom && moms.length > 0 && dads.length > 0) {
       dispatch(setMom({ dna: moms[0].dna }));
-    }
-  }, [moms]);
-
-  useEffect(() => {
-    if (selectedMom && !selectedDad && dads.length > 0) {
       dispatch(setDad({ dna: dads[0].dna }));
     }
-  }, [dads]);
+  }, [selectedDad, selectedMom, moms, dads, dispatch]);
 
   return (
     <>
@@ -139,7 +179,7 @@ export const Breed = () => {
             </Select>
           </FormControl>
           <FormControl mt={5}>
-            <FormLabel>Kitty name</FormLabel>
+            <FormLabel>Kitty name (4 characters)</FormLabel>
             <Input
               onInput={(event: React.FormEvent<HTMLInputElement>) =>
                 setKittyName(event.currentTarget.value)
