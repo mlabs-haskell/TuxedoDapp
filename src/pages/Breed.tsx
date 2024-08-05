@@ -70,7 +70,7 @@ export const Breed = () => {
     }
     if (warnings.length > 0) {
       toast({
-        title: warnings.join(", "),
+        title: warnings.join(" "),
         status: "warning",
         isClosable: true,
         duration: 10000,
