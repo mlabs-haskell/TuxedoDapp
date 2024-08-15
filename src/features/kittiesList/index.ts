@@ -40,18 +40,19 @@ const kittiesSlice = createSlice({
     // standard reducer logic, with auto-generated action types per reducer
   },
   extraReducers: (builder) => {
+    builder.addCase(getKitties.pending, (state) => {
+      state.loading = "pending";
+      state.error = undefined;
+    });
     builder.addCase(getKitties.fulfilled, (state, action) => {
-      if (action.payload?.message?.toLowerCase().includes("error")) {
-        state.error = action.payload.message;
-      }
-      if (!action.payload?.owner_kitty_list) {
-        state.loading = "failed";
-        return;
-      }
       state.list = action.payload?.owner_kitty_list.map(transformKittyForUi);
-
       state.loading = "succeeded";
       state.error = undefined;
+    });
+    builder.addCase(getKitties.rejected, (state, action) => {
+      state.list = [];
+      state.loading = "failed";
+      state.error = action.error.message;
     });
   },
 });

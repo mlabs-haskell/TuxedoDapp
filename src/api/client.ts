@@ -3,11 +3,18 @@ import { apiCall, cut0x, Handlers, sign, transformKittyForUi } from "./utils";
 
 export const api = {
   "show-all-kitties": async () => {
-    const basicKitties = await apiCall("get-all-kitty-list", "GET");
+    const allKittyResponse = await apiCall("get-all-kitty-list", "GET");
 
-    const tradableKitties = await apiCall("get-all-tradable-kitty-list", "GET");
-    const kittyList = tradableKitties["td_kitty_list"] || [];
-    const kittiesToAdd = kittyList.map((tdKitty: any) => ({
+    if (allKittyResponse.error) {
+      throw new Error(`Error fetching kitties: ${allKittyResponse.data}`);
+    }
+
+    const ownerKitties = allKittyResponse["owner_kitty_list"] || [];
+
+    const tradableKittiesResponse = await apiCall("get-all-tradable-kitty-list", "GET");
+    const tradableKitties = tradableKittiesResponse["td_kitty_list"] || [];
+
+    const convertedTradableKitties = tradableKitties.map((tdKitty: any) => ({
       kitty: {
         ...tdKitty["td_kitty"]["kitty_basic_data"],
         price: tdKitty["td_kitty"]["price"],
@@ -16,16 +23,23 @@ export const api = {
     }));
 
     return {
-      ...basicKitties,
-      owner_kitty_list: [...basicKitties.owner_kitty_list, ...kittiesToAdd],
+      ...allKittyResponse,
+      owner_kitty_list: [...ownerKitties, ...convertedTradableKitties],
     };
   },
   "show-owned-kitties": async (user: string) => {
-    const ownedKitties = await apiCall("get-owned-kitty-list", "GET", {
+    const response = await apiCall("get-owned-kitty-list", "GET", {
       owner_public_key: cut0x(user),
     });
+
+    if (response.error) {
+      throw new Error(`Error fetching owned kitties: ${response.data}`);
+    }
+
+    const kittyList = response["kitty_list"] || [];
+
     return {
-      owner_kitty_list: ownedKitties["kitty_list"].map((kittyData: any) => ({
+      owner_kitty_list: kittyList.map((kittyData: any) => ({
         kitty: kittyData,
         owner_pub_key: cut0x(user),
       })),

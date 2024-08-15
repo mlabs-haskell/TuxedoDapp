@@ -17,10 +17,14 @@ const rootReducer = combineReducers({
   trading: tradingSlice,
 })
 
+// State is mostly transient and persisting was only leading to stale data
+// after loading/refreshing the page. For this reason, the whitelist is
+// currently empty. Add to it only after careful consideration.
 const persistConfig = {
   key: 'root',
   version: 1,
   storage,
+  whitelist: [],
 }
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 export const store = configureStore({

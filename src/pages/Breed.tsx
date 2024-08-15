@@ -24,7 +24,6 @@ import { Kitty } from "../types";
 import { selectAccount } from "../features/wallet/walletSlice";
 import {
   postBreed,
-  selectChild,
   selectDad,
   selectMom,
   setDad,
@@ -32,7 +31,6 @@ import {
 } from "../features/breeding";
 
 export const Breed = () => {
-  const [state, setState] = useState<"breeding" | "result">("breeding");
   const { isOpen, onClose } = useDisclosure();
   const dispatch = useAppDispatch();
   const [dads, moms] = useAppSelector(selectKitties).reduce<[Kitty[], Kitty[]]>(
@@ -50,7 +48,6 @@ export const Breed = () => {
   const toast = useToast();
   const selectedMom = useAppSelector(selectMom);
   const selectedDad = useAppSelector(selectDad);
-  const selectedChild = useAppSelector(selectChild);
   const [kittyName, setKittyName] = useState("");
 
   const handleMomSelect = (event: React.FormEvent<HTMLSelectElement>) => {
@@ -90,17 +87,17 @@ export const Breed = () => {
       return;
     }
 
+    const breedParams = {
+      mom: selectedMom.dna,
+      dad: selectedDad.dna,
+      name: kittyName,
+      key: account?.key!,
+    };
+
     // Dispatch the breeding action and show the result as a toast message.
     // The results could be handled in the reducer but there is little benefit
     // in this case since we only need to display a one-time message.
-    dispatch(
-      postBreed({
-        mom: selectedMom.dna,
-        dad: selectedDad.dna,
-        name: kittyName,
-        key: account?.key!,
-      }),
-    )
+    dispatch(postBreed(breedParams))
       .unwrap()
       .then((() => {
         toast({
