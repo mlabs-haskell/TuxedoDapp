@@ -18,7 +18,6 @@ import {
   InputLeftElement,
   Divider,
   Tooltip,
-  CircularProgress,
 } from "@chakra-ui/react";
 import { To, useNavigate } from "react-router-dom";
 import { SearchIcon } from "chakra-ui-ionicons";
@@ -32,6 +31,7 @@ import {
 } from "../features/kittiesList";
 import { Kitty } from "../types";
 import { setKitty } from "../features/kittyDetails";
+import { LoadingStatus } from "../components/LoadingStatus";
 
 const fuseOptions = {
   // isCaseSensitive: false,
@@ -54,16 +54,19 @@ export const Search = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const list = useAppSelector(selectKitties);
-  const loading = useAppSelector(selectStatus);
+  const status = useAppSelector(selectStatus);
   const error = useAppSelector(selectError);
   const fuse = new Fuse(list, fuseOptions);
+
+  const message = error ?? filteredList.length === 0 ? "No kitties found" : undefined;
+
   const handleRowClick = (page: To, kitty: Kitty) => () => {
     dispatch(setKitty(kitty));
     navigate(page);
   };
   useEffect(() => {
     dispatch(getKitties());
-  }, []);
+  }, [dispatch]);
   useEffect(() => {
     setList(list.map((kitty) => ({ item: kitty, refIndex: 1 })));
   }, [list]);
@@ -163,12 +166,7 @@ export const Search = () => {
                 </Tbody>
               </Table>
             </TableContainer>
-            <Flex justifyContent="center">
-              {loading === "idle" && (
-                <CircularProgress isIndeterminate color="teal" />
-              )}
-              {!!error && error}
-            </Flex>
+            <LoadingStatus status={status} message={message} />
           </GridItem>
         </Grid>
       </Container>

@@ -25,11 +25,12 @@ import {
 import { Link, To, useNavigate } from "react-router-dom";
 import { EggIcon, SearchIcon } from "chakra-ui-ionicons";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { getKitties, selectKitties } from "../features/kittiesList";
+import { getKitties, selectError, selectKitties, selectStatus } from "../features/kittiesList";
 import { selectAccount } from "../features/wallet/walletSlice";
 import { setKitty } from "../features/kittyDetails";
 import { Kitty } from "../types";
 import Fuse, { FuseResult } from "fuse.js";
+import { LoadingStatus } from "../components/LoadingStatus";
 
 const colors: Record<string, string> = {
   "ready to bread": "pink",
@@ -40,12 +41,15 @@ export const MyKitties = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const list = useAppSelector(selectKitties);
+  const status = useAppSelector(selectStatus);
+  const error = useAppSelector(selectError);
   const account = useAppSelector(selectAccount);
   const [filteredList, setList] = useState<FuseResult<Kitty>[]>([]);
   const fuse = new Fuse(list, {
     shouldSort: true,
     keys: ["name", "hash", "status", "forSale"],
   });
+  const message = error ?? filteredList.length === 0 ? "No kitties found" : undefined;
 
   useEffect(() => {
     if (!account) return;
@@ -148,6 +152,7 @@ export const MyKitties = () => {
                 </Tbody>
               </Table>
             </TableContainer>
+            <LoadingStatus status={status} message={message} />
           </GridItem>
         </Grid>
       </Container>
