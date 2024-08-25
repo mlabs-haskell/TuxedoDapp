@@ -13,9 +13,6 @@ import {
   ModalOverlay,
   useDisclosure,
   Input,
-  Textarea,
-  Text,
-  Tag,
   useToast,
 } from "@chakra-ui/react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
@@ -35,6 +32,8 @@ export const Breed = () => {
   const dispatch = useAppDispatch();
   const [dads, moms] = useAppSelector(selectKitties).reduce<[Kitty[], Kitty[]]>(
     (acc, kitty) => {
+      if (kitty.status !== "RearinToGo") return acc;
+
       if (kitty.gender === "male") {
         acc[0].push(kitty);
       } else {
@@ -49,6 +48,17 @@ export const Breed = () => {
   const selectedMom = useAppSelector(selectMom);
   const selectedDad = useAppSelector(selectDad);
   const [kittyName, setKittyName] = useState("");
+
+  const renderKittyOption = (kitty: Kitty) => {
+    return (
+      <option key={kitty.dna} value={kitty.dna}>
+        {kitty.name} {kitty.dna}
+      </option>
+    );
+  }
+
+  const renderWarning = (parentType: "mom" | "dad") =>
+    <p style={{ color: "red" }}>No {parentType}s ready for breeding</p>
 
   const handleMomSelect = (event: React.FormEvent<HTMLSelectElement>) => {
     dispatch(setMom({ dna: event.currentTarget.value }));
@@ -158,23 +168,17 @@ export const Breed = () => {
           <FormControl>
             <FormLabel>Mom</FormLabel>
             <Select onChange={handleMomSelect}>
-              {moms.map((kitty) => (
-                <option key={kitty.dna} value={kitty.dna}>
-                  {kitty.name} {kitty.dna}
-                </option>
-              ))}
+              {moms.map(renderKittyOption)}
             </Select>
           </FormControl>
+          {moms.length === 0 && renderWarning("mom")}
           <FormControl mt={5}>
             <FormLabel>Dad</FormLabel>
             <Select onChange={handleDadSelect}>
-              {dads.map((kitty) => (
-                <option key={kitty.dna} value={kitty.dna}>
-                  {kitty.name} {kitty.dna}
-                </option>
-              ))}
+              {dads.map(renderKittyOption)}
             </Select>
           </FormControl>
+          {dads.length === 0 && renderWarning("dad")}
           <FormControl mt={5}>
             <FormLabel>Kitty name (4 characters)</FormLabel>
             <Input

@@ -31,12 +31,8 @@ import { setKitty } from "../features/kittyDetails";
 import { Kitty } from "../types";
 import Fuse, { FuseResult } from "fuse.js";
 import { LoadingStatus } from "../components/LoadingStatus";
+import { getStatusColor } from "../utils";
 
-const colors: Record<string, string> = {
-  "ready to bread": "pink",
-  tired: "purple",
-  "had birth recently": "teal",
-};
 export const MyKitties = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -137,7 +133,7 @@ export const MyKitties = () => {
                       </Td>
                       <Td>{item?.breedings}</Td>
                       <Td>
-                        <Tag colorScheme={colors[item?.status]}>
+                        <Tag colorScheme={getStatusColor(item?.status)}>
                           {item?.status}
                         </Tag>
                       </Td>

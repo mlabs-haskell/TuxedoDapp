@@ -32,6 +32,7 @@ import {
 import { Kitty } from "../types";
 import { setKitty } from "../features/kittyDetails";
 import { LoadingStatus } from "../components/LoadingStatus";
+import { getStatusColor } from "../utils";
 
 const fuseOptions = {
   // isCaseSensitive: false,
@@ -70,11 +71,6 @@ export const Search = () => {
   useEffect(() => {
     setList(list.map((kitty) => ({ item: kitty, refIndex: 1 })));
   }, [list]);
-  const colors: Record<string, string> = {
-    RearinToGo: "pink",
-    tired: "purple",
-    "had birth recently": "teal",
-  };
 
   const handleSearch = (e: React.FormEvent<HTMLInputElement>) => {
     if (e.currentTarget.value.length > 0) {
@@ -151,7 +147,7 @@ export const Search = () => {
                       </Td>
                       <Td>{item?.breedings}</Td>
                       <Td>
-                        <Tag colorScheme={colors[item?.status]}>
+                        <Tag colorScheme={getStatusColor(item?.status)}>
                           {item?.status}
                         </Tag>
                       </Td>
