@@ -74,18 +74,23 @@ export const api = {
       "child-kitty-name": name,
       owner_public_key: cut0x(user),
     };
-    const response = await apiCall(
+    const txResponse = await apiCall(
       "get-txn-and-inpututxolist-for-breed-kitty",
       "GET",
       txBody,
     );
 
-    if (!response.transaction) {
-      throw new Error(response.message || "Getting transaction for breeding kitty failed");
+    if (!txResponse.transaction) {
+      throw new Error(txResponse.message || "Getting transaction for breeding kitty failed");
     }
 
-    const signedTransaction = await sign(response, accounts);
-    return await apiCall(updateHandle, "POST", {}, signedTransaction);
+    const signedTransaction = await sign(txResponse, accounts);
+    
+    const breedResponse = await apiCall(updateHandle, "POST", {}, signedTransaction);
+
+    if (!breedResponse.child_kitty) {
+      throw new Error(breedResponse.message || "Kitty breeding failed");
+    }
   },
   "set-kitty-property": async (kitty: Partial<Kitty>) => {
     //price
