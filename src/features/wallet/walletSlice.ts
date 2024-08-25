@@ -4,12 +4,10 @@ import { wallet } from "../../types";
 
 export interface WalletState {
   accounts?:wallet[];
-  isConnected: boolean;
 }
 
 const initialState: WalletState = {
   accounts: undefined,
-  isConnected: false,
 };
 
 // Then, handle actions in your reducers:
@@ -23,18 +21,11 @@ const walletSlice = createSlice({
     logout: (state) => {
       state.accounts = undefined;
     },
-    connect: (state) => {
-      state.isConnected = true;
-    },
-    disConnect: (state)=> {
-      state.isConnected = false;
-    }
   }
 })
 
 export const selectAccount = (state: RootState) => state.wallet.accounts?.[0];
 export const selectAccounts = (state: RootState) => state.wallet.accounts;
-export const selectIsConnected = (state: RootState) => state.wallet.isConnected;
-export const { login, logout, connect, disConnect } = walletSlice.actions;
+export const { login, logout } = walletSlice.actions;
 
 export default walletSlice.reducer;
