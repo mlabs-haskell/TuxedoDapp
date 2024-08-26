@@ -22,14 +22,10 @@ export const WalletSelector = () => {
         isClosable: true,
       });
 
-      // get an array of wallets which are installed
       const installedWallets = getWallets().filter(
         (wallet) => wallet.installed
       );
 
-      console.log("installedWallets", installedWallets);
-
-      // get talisman from the array of installed wallets
       const talismanWallet = installedWallets.find(
         (wallet) => wallet.extensionName === "talisman"
       );
