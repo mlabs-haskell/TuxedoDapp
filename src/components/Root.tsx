@@ -7,18 +7,13 @@ import { Button, Stack, Container, Flex } from '@chakra-ui/react';
 import {SearchIcon, PersonCircleIcon} from "chakra-ui-ionicons";
 import { WalletSelector } from "../features/wallet";
 import { useAppSelector } from "../app/hooks";
-import { selectAccount, selectIsConnected } from "../features/wallet/walletSlice";
-import {getWalletBySource} from "@talisman-connect/wallets";
+import { selectAccount } from "../features/wallet/walletSlice";
 
 export const Root = () => {
   const account = useAppSelector(selectAccount);
   // @ts-ignore
   const isConnected = !!window.accounts;
-  const wallet = getWalletBySource('talisman');
 
-  useEffect(()=>{
-    if (!account || !wallet) return;
-  },[account, wallet])
 
   return (
     <div className="App">

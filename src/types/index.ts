@@ -2,6 +2,8 @@ import {
   WalletAccount,
 } from '@talismn/connect-wallets';
 
+export type KittyStatus = "had birth recently" | "tired" |  "RearinToGo";
+
 export type Kitty = {
   owner?: string;
   dna?: string;
@@ -16,7 +18,7 @@ export type Kitty = {
     name: string;
   }
   breedings: number;// Number of breedings
-  status: string;
+  status: KittyStatus;
   forSale: boolean;
   price?: number;
 };

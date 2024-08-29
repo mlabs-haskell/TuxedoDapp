@@ -18,7 +18,6 @@ import {
   InputLeftElement,
   Divider,
   Tooltip,
-  CircularProgress,
 } from "@chakra-ui/react";
 import { To, useNavigate } from "react-router-dom";
 import { SearchIcon } from "chakra-ui-ionicons";
@@ -32,6 +31,8 @@ import {
 } from "../features/kittiesList";
 import { Kitty } from "../types";
 import { setKitty } from "../features/kittyDetails";
+import { LoadingStatus } from "../components/LoadingStatus";
+import { getStatusColor } from "../utils";
 
 const fuseOptions = {
   // isCaseSensitive: false,
@@ -54,24 +55,22 @@ export const Search = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const list = useAppSelector(selectKitties);
-  const loading = useAppSelector(selectStatus);
+  const status = useAppSelector(selectStatus);
   const error = useAppSelector(selectError);
   const fuse = new Fuse(list, fuseOptions);
+
+  const message = error ?? filteredList.length === 0 ? "No kitties found" : undefined;
+
   const handleRowClick = (page: To, kitty: Kitty) => () => {
     dispatch(setKitty(kitty));
     navigate(page);
   };
   useEffect(() => {
     dispatch(getKitties());
-  }, []);
+  }, [dispatch]);
   useEffect(() => {
     setList(list.map((kitty) => ({ item: kitty, refIndex: 1 })));
   }, [list]);
-  const colors: Record<string, string> = {
-    RearinToGo: "pink",
-    tired: "purple",
-    "had birth recently": "teal",
-  };
 
   const handleSearch = (e: React.FormEvent<HTMLInputElement>) => {
     if (e.currentTarget.value.length > 0) {
@@ -148,7 +147,7 @@ export const Search = () => {
                       </Td>
                       <Td>{item?.breedings}</Td>
                       <Td>
-                        <Tag colorScheme={colors[item?.status]}>
+                        <Tag colorScheme={getStatusColor(item?.status)}>
                           {item?.status}
                         </Tag>
                       </Td>
@@ -163,12 +162,7 @@ export const Search = () => {
                 </Tbody>
               </Table>
             </TableContainer>
-            <Flex justifyContent="center">
-              {loading === "idle" && (
-                <CircularProgress isIndeterminate color="teal" />
-              )}
-              {!!error && error}
-            </Flex>
+            <LoadingStatus status={status} message={message} />
           </GridItem>
         </Grid>
       </Container>
