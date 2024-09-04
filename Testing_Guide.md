@@ -20,9 +20,7 @@ Build environment used
 Run the following command to clone the Tuxedo repo on the `main` branch:
 
 ```sh
-
-git  clone  https://github.com/mlabs-haskell/Tuxedo.git
-
+git clone https://github.com/mlabs-haskell/Tuxedo.git
 ```
 
 #### Build and Run the Node
@@ -30,25 +28,19 @@ git  clone  https://github.com/mlabs-haskell/Tuxedo.git
 Navigate to the cloned Tuxedo repo directory:
 
 ```
-
 cd Tuxedo
-
 ```
 
 Build the node using Cargo:
 
 ```sh
-
-cargo  build  --release  -p  node-template
-
+cargo build --release -p node-template
 ```
 
 Run the node in dev mode:
 
 ```sh
-
-./target/release/node-template  --dev
-
+./target/release/node-template --dev
 ```
 
 ## Build and run the Webservice:
@@ -56,25 +48,19 @@ Run the node in dev mode:
 On a separate terminal, navigate to the `webservice-wallet` folder within the Tuxedo repo:
 
 ```sh
-
-cd  webservice-wallet
-
+cd webservice-wallet
 ```
 
 Build the webservice using Cargo:
 
 ```sh
-
-cargo  build
-
+cargo build
 ```
 
 Run the webservice:
 
 ```sh
-
-cargo  run
-
+cargo run
 ```
 
 ## Running the dApp
@@ -82,33 +68,25 @@ cargo  run
 Open a new terminal window. Clone the dApp repo:
 
 ```sh
-
-git  clone  https://github.com/mlabs-haskell/TuxedoDapp.git
-
+git clone https://github.com/mlabs-haskell/TuxedoDapp.git
 ```
 
 Navigate to the cloned dApp directory:
 
 ```sh
-
-cd  TuxedoDapp
-
+cd TuxedoDapp
 ```
 
 Install the dependencies using Yarn:
 
 ```sh
-
-yarn  install
-
+yarn install
 ```
 
 Start the dApp locally:
 
 ```sh
-
-yarn  start
-
+yarn start
 ```
   
 You should now have the Tuxedo node running in dev mode, the webservice running, and the dApp running locally. You can test out the functionality of the dApp and interact with the Tuxedo blockchain.
@@ -118,41 +96,29 @@ You should now have the Tuxedo node running in dev mode, the webservice running,
 1. Fetch the local keys by running:
 
 ```sh
-
 curl --location 'http://localhost:3000/debug-get-keys'
-
 ```
 
 2. Make a `POST` request to `http://localhost:3000/debug-generate-key` to generate a key in the local keystore in the wallet-cli
 
 ```sh
-
-curl --location 'http://localhost:3000/debug-generate-key'  \
-
---header 'Content-Type: application/json'  \
-
+curl --location 'http://localhost:3000/debug-generate-key' \
+--header 'Content-Type: application/json' \
 --data '{
-
-"password": ""
-
+  "password": ""
 }'
-
 ```
 
 *Sample output:*
 
 ```json
-
 {"message":"Keys generated successfully","public_key":"4875f18ce60479b935b257b2cfe17a03432f80af93b368f4653f2381fded9674","phrase":"convince defy athlete buyer truly inside inmate pool foil noodle barely supreme"}
-
 ```
 
 3. Make a request by `debug-get-key` again by running:
 
 ```sh
-
 curl --location 'http://localhost:3000/debug-get-keys'
-
 ```
 
 4. Copy the `phrase` from the output of the command above and import it to Talisman (Settings -> Account -> Add New Account -> Import -> Import via Recovery Phrase -> Polkadot)
@@ -166,41 +132,25 @@ curl --location 'http://localhost:3000/debug-get-keys'
 - Create the male parent, make sure to replace the `owner_public_key` with the public key copied at the previous step (step 3):
 
 ```sh
-
-curl --location 'http://localhost:3000/post-create-kitty'  \
-
---header 'Content-Type: application/json'  \
-
+curl --location 'http://localhost:3000/post-create-kitty' \
+--header 'Content-Type: application/json' \
 --data '{
-
-"name": "kit1",
-
-"owner_public_key": "4875f18ce60479b935b257b2cfe17a03432f80af93b368f4653f2381fded9674",
-
-"gender": "Male"
-
+  "name": "kit1",
+  "owner_public_key": "4875f18ce60479b935b257b2cfe17a03432f80af93b368f4653f2381fded9674",
+  "gender": "Male"
 }'
-
 ```
 
 - Create the female parent:
 
 ```sh
-
-curl --location 'http://localhost:3000/post-create-kitty'  \
-
---header 'Content-Type: application/json'  \
-
+curl --location 'http://localhost:3000/post-create-kitty' \
+--header 'Content-Type: application/json' \
 --data '{
-
-"name": "kit2",
-
-"owner_public_key": "4875f18ce60479b935b257b2cfe17a03432f80af93b368f4653f2381fded9674",
-
-"gender": "Female"
-
+  "name": "kit2",
+  "owner_public_key": "4875f18ce60479b935b257b2cfe17a03432f80af93b368f4653f2381fded9674",
+  "gender": "Female"
 }'
-
 ```
 *Note: For the name of the kitty it is mandatory to use 4 characters*
 
@@ -236,19 +186,12 @@ For the buyer, we'll need to mint some tokens, the process can be as follows:
 *Note: The change does not return to the wallet. Every time you purchase a kitty, you have to mint coins.* 
 
 ```sh
-
-curl --location 'http://localhost:3000/post-mint-coin'  \
-
---header 'Content-Type: application/json'  \
-
+curl --location 'http://localhost:3000/post-mint-coin' \
+--header 'Content-Type: application/json' \
 --data '{
-
-"owner_public_key": "4050f574baa3c9af13b264560925e98d0750cb428b8f97562225a26a7fecd178",
-
-"amount": 200
-
+  "owner_public_key": "4050f574baa3c9af13b264560925e98d0750cb428b8f97562225a26a7fecd178",
+  "amount": 200
 }'
-
 ```
 
 - Connect to the site as the buyer's wallet through Talisman.
