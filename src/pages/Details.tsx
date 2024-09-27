@@ -44,24 +44,37 @@ export const Details = () => {
   const dispatch = useAppDispatch();
   const [hasChanged, setChangedFields] = useState<Record<string, boolean>>({});
   const handleClose = useCallback((coin: string, outputAmount: number) => {
+    // Avoid purchasing if any of the required fields are missing.
+    // This happens when closing the modal without selecting a coin.
+    if (!coin || !outputAmount || !kitty) {
+      onClose();
+      return;
+    }
+
     dispatch(
       purchaseKitty({
         kitty: kitty as Kitty,
         key: account?.key!,
         outputAmount,
         coin,
-      }),
-    );
-
-    toast({
-      title: "Kitty purchased successfully!",
-      status: "success",
-      isClosable: true,
-      duration: 10000,
-      position: "top-right",
-    });
-    onClose();
-  }, []);
+      })
+    )
+      .unwrap()
+      .then(() => {
+        toast({
+          title: "Kitty purchased successfully!",
+          description: "Kitty info will update once the transaction is confirmed.",
+          status: "success",
+          isClosable: true,
+          duration: 10000,
+          position: "top-right",
+        });
+      })
+      .finally(() => {
+        onClose();
+      });
+  }, [account?.key, dispatch, kitty, onClose, toast]);
+  
   const handleBreed = () => {
     if (!kitty) return;
     if (kitty?.gender === "male") {
@@ -132,8 +145,15 @@ export const Details = () => {
       navigate("/");
       return;
     }
-    dispatch(getKitty(kitty.dna!));
-  }, [kitty?.dna]);
+
+    // Fetch kitty details every 10 seconds to ensure they are up to date
+    // prior to any action.
+    const interval = setInterval(() => {
+      dispatch(getKitty(kitty.dna!));
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, [kitty, dispatch, navigate]);
 
   return (
     <div className="main">

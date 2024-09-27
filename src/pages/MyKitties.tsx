@@ -25,13 +25,14 @@ import {
 import { Link, To, useNavigate } from "react-router-dom";
 import { EggIcon, SearchIcon } from "chakra-ui-ionicons";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { getKitties, selectError, selectKitties, selectStatus } from "../features/kittiesList";
+import { selectError, selectKitties, selectStatus } from "../features/kittiesList";
 import { selectAccount } from "../features/wallet/walletSlice";
 import { setKitty } from "../features/kittyDetails";
 import { Kitty } from "../types";
 import Fuse, { FuseResult } from "fuse.js";
 import { LoadingStatus } from "../components/LoadingStatus";
 import { getStatusColor } from "../utils";
+import { useRefreshKittiesList } from "../features/kittiesList/useRefreshKittiesList";
 
 export const MyKitties = () => {
   const navigate = useNavigate();
@@ -47,10 +48,8 @@ export const MyKitties = () => {
   });
   const message = error ?? filteredList.length === 0 ? "No kitties found" : undefined;
 
-  useEffect(() => {
-    if (!account) return;
-    dispatch(getKitties(account.key));
-  }, [account]);
+  useRefreshKittiesList({ intervalMilliseconds: 10000, accountKey: account?.key });
+
   const handleRowClick = (page: To, kitty: Kitty) => () => {
     dispatch(setKitty(kitty));
     navigate(page);

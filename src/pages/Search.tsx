@@ -24,7 +24,6 @@ import { SearchIcon } from "chakra-ui-ionicons";
 import Fuse, { FuseResult } from "fuse.js";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import {
-  getKitties,
   selectError,
   selectKitties,
   selectStatus,
@@ -33,6 +32,7 @@ import { Kitty } from "../types";
 import { setKitty } from "../features/kittyDetails";
 import { LoadingStatus } from "../components/LoadingStatus";
 import { getStatusColor } from "../utils";
+import { useRefreshKittiesList } from "../features/kittiesList/useRefreshKittiesList";
 
 const fuseOptions = {
   // isCaseSensitive: false,
@@ -59,15 +59,15 @@ export const Search = () => {
   const error = useAppSelector(selectError);
   const fuse = new Fuse(list, fuseOptions);
 
+  useRefreshKittiesList({ intervalMilliseconds: 10000 });
+
   const message = error ?? filteredList.length === 0 ? "No kitties found" : undefined;
 
   const handleRowClick = (page: To, kitty: Kitty) => () => {
     dispatch(setKitty(kitty));
     navigate(page);
   };
-  useEffect(() => {
-    dispatch(getKitties());
-  }, [dispatch]);
+
   useEffect(() => {
     setList(list.map((kitty) => ({ item: kitty, refIndex: 1 })));
   }, [list]);
