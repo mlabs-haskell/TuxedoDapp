@@ -113,7 +113,7 @@ export const MyKitties = () => {
                   </Tr>
                 </Thead>
                 <Tbody>
-                {filteredList.map(({ item }) => (
+                  {filteredList.map(({ item }) => (
                     <Tr
                       key={item?.dna}
                       onClick={handleRowClick("/details", item)}
