@@ -90,7 +90,7 @@ export const WalletSelector = () => {
       connectWallet().catch((error) => {
         toast({
           title: "Error connecting wallet",
-          description: error,
+          description: error.message,
           status: "error",
           duration: 9000,
           isClosable: true,
