@@ -1,4 +1,5 @@
 # Tuxedo DApp, Extended CLI-wallet and Talisman integration
+[![W3F Sponsored](https://raw.githubusercontent.com/w3f/Grants-Program/00855ef70bc503433dc9fccc057c2f66a426a82b/static/img/badge_black.svg)](https://web3.foundation/)
 
 ### Overview
 
